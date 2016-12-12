@@ -1,0 +1,14 @@
+# Personal settings
+app/.settings
+app/.launches
+stack/.settings
+stack/.launches
+
+# Builds
+app/FlashROM
+stack/FlashROM
+
+# Misc
+*.swp
+*.swo
+tags
