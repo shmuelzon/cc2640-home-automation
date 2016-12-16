@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>simple_peripheral_cc2650em_app</name>
+	<name>home_automation_app</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -27,11 +27,6 @@
 	</natures>
 	<linkedResources>
 		<link>
-			<name>Application</name>
-			<type>2</type>
-			<locationURI>virtual:/virtual</locationURI>
-		</link>
-		<link>
 			<name>Drivers</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
@@ -57,17 +52,12 @@
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
-			<name>PROFILES</name>
+			<name>Profiles</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
-			<name>Startup</name>
-			<type>2</type>
-			<locationURI>virtual:/virtual</locationURI>
-		</link>
-		<link>
-			<name>TOOLS</name>
+			<name>Tools</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
@@ -80,16 +70,6 @@
 			<name>Application/rcosc_calibration.h</name>
 			<type>1</type>
 			<locationURI>SRC_EX/common/cc26xx/rcosc/rcosc_calibration.h</locationURI>
-		</link>
-		<link>
-			<name>Application/simple_peripheral.c</name>
-			<type>1</type>
-			<locationURI>SRC_EX/examples/simple_peripheral/cc26xx/app/simple_peripheral.c</locationURI>
-		</link>
-		<link>
-			<name>Application/simple_peripheral.h</name>
-			<type>1</type>
-			<locationURI>SRC_EX/examples/simple_peripheral/cc26xx/app/simple_peripheral.h</locationURI>
 		</link>
 		<link>
 			<name>Application/util.c</name>
@@ -227,94 +207,89 @@
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
-			<name>PROFILES/devinfoservice.c</name>
+			<name>Profiles/devinfoservice.c</name>
 			<type>1</type>
 			<locationURI>SRC_EX/profiles/dev_info/cc26xx/devinfoservice.c</locationURI>
 		</link>
 		<link>
-			<name>PROFILES/devinfoservice.h</name>
+			<name>Profiles/devinfoservice.h</name>
 			<type>1</type>
 			<locationURI>SRC_EX/profiles/dev_info/devinfoservice.h</locationURI>
 		</link>
 		<link>
-			<name>PROFILES/ext_flash_layout.h</name>
+			<name>Profiles/ext_flash_layout.h</name>
 			<type>1</type>
 			<locationURI>SRC_EX/common/cc26xx/ext_flash_layout.h</locationURI>
 		</link>
 		<link>
-			<name>PROFILES/gatt_profile_uuid.h</name>
+			<name>Profiles/gatt_profile_uuid.h</name>
 			<type>1</type>
 			<locationURI>SRC_EX/inc/gatt_profile_uuid.h</locationURI>
 		</link>
 		<link>
-			<name>PROFILES/gatt_uuid.c</name>
+			<name>Profiles/gatt_uuid.c</name>
 			<type>1</type>
 			<locationURI>SRC_BLE_CORE/host/gatt_uuid.c</locationURI>
 		</link>
 		<link>
-			<name>PROFILES/gatt_uuid.h</name>
+			<name>Profiles/gatt_uuid.h</name>
 			<type>1</type>
 			<locationURI>SRC_BLE_CORE/inc/gatt_uuid.h</locationURI>
 		</link>
 		<link>
-			<name>PROFILES/gattservapp_util.c</name>
+			<name>Profiles/gattservapp_util.c</name>
 			<type>1</type>
 			<locationURI>SRC_BLE_CORE/host/gattservapp_util.c</locationURI>
 		</link>
 		<link>
-			<name>PROFILES/oad.c</name>
+			<name>Profiles/oad.c</name>
 			<type>1</type>
 			<locationURI>SRC_EX/profiles/oad/cc26xx/oad.c</locationURI>
 		</link>
 		<link>
-			<name>PROFILES/oad.h</name>
+			<name>Profiles/oad.h</name>
 			<type>1</type>
 			<locationURI>SRC_EX/profiles/oad/cc26xx/oad.h</locationURI>
 		</link>
 		<link>
-			<name>PROFILES/oad_target.h</name>
+			<name>Profiles/oad_target.h</name>
 			<type>1</type>
 			<locationURI>SRC_EX/profiles/oad/cc26xx/oad_target.h</locationURI>
 		</link>
 		<link>
-			<name>PROFILES/oad_target_external_flash.c</name>
+			<name>Profiles/oad_target_external_flash.c</name>
 			<type>1</type>
 			<locationURI>SRC_EX/profiles/oad/cc26xx/oad_target_external_flash.c</locationURI>
 		</link>
 		<link>
-			<name>PROFILES/peripheral.c</name>
+			<name>Profiles/peripheral.c</name>
 			<type>1</type>
 			<locationURI>SRC_EX/profiles/roles/cc26xx/peripheral.c</locationURI>
 		</link>
 		<link>
-			<name>PROFILES/peripheral.h</name>
+			<name>Profiles/peripheral.h</name>
 			<type>1</type>
 			<locationURI>SRC_EX/profiles/roles/cc26xx/peripheral.h</locationURI>
 		</link>
 		<link>
-			<name>PROFILES/simple_gatt_profile.c</name>
+			<name>Profiles/simple_gatt_profile.c</name>
 			<type>1</type>
 			<locationURI>SRC_EX/profiles/simple_profile/cc26xx/simple_gatt_profile.c</locationURI>
 		</link>
 		<link>
-			<name>PROFILES/simple_gatt_profile.h</name>
+			<name>Profiles/simple_gatt_profile.h</name>
 			<type>1</type>
 			<locationURI>SRC_EX/profiles/simple_profile/simple_gatt_profile.h</locationURI>
 		</link>
 		<link>
-			<name>PROFILES/simplekeys.c</name>
+			<name>Profiles/simplekeys.c</name>
 			<type>1</type>
 			<locationURI>SRC_EX/profiles/keys/cc26xx/simplekeys.c</locationURI>
 		</link>
 		<link>
-			<name>PROFILES/simplekeys.h</name>
+			<name>Profiles/simplekeys.h</name>
 			<type>1</type>
 			<locationURI>SRC_EX/profiles/keys/simplekeys.h</locationURI>
-		</link>
-		<link>
-			<name>Startup/board.c</name>
-			<type>1</type>
-			<locationURI>SRC_EX/target/board.c</locationURI>
 		</link>
 		<link>
 			<name>Startup/ccfg_app_ble.c</name>
@@ -327,32 +302,27 @@
 			<locationURI>SRC_EX/common/cc26xx/rcosc/ccfg_app_ble_rcosc.c</locationURI>
 		</link>
 		<link>
-			<name>Startup/main.c</name>
-			<type>1</type>
-			<locationURI>SRC_EX/examples/simple_peripheral/cc26xx/app/main.c</locationURI>
-		</link>
-		<link>
-			<name>TOOLS/app_ble.cfg</name>
+			<name>Tools/app_ble.cfg</name>
 			<type>1</type>
 			<locationURI>PARENT-2-ORG_PROJ_DIR/ccs/config/app_ble.cfg</locationURI>
 		</link>
 		<link>
-			<name>TOOLS/cc26xx_app.cmd</name>
+			<name>Tools/cc26xx_app.cmd</name>
 			<type>1</type>
 			<locationURI>SRC_EX/common/cc26xx/ccs/cc26xx_app.cmd</locationURI>
 		</link>
 		<link>
-			<name>TOOLS/cc26xx_app_oad.cmd</name>
+			<name>Tools/cc26xx_app_oad.cmd</name>
 			<type>1</type>
 			<locationURI>SRC_EX/common/cc26xx/ccs/cc26xx_app_oad.cmd</locationURI>
 		</link>
 		<link>
-			<name>TOOLS/ccs_compiler_defines.bcfg</name>
+			<name>Tools/ccs_compiler_defines.bcfg</name>
 			<type>1</type>
 			<locationURI>PARENT-2-ORG_PROJ_DIR/ccs/config/ccs_compiler_defines.bcfg</locationURI>
 		</link>
 		<link>
-			<name>TOOLS/ccs_linker_defines.cmd</name>
+			<name>Tools/ccs_linker_defines.cmd</name>
 			<type>1</type>
 			<locationURI>PARENT-2-ORG_PROJ_DIR/ccs/config/ccs_linker_defines.cmd</locationURI>
 		</link>
@@ -530,7 +500,7 @@
 			<value>file:/C:/ti/tirtos_cc13xx_cc26xx_2_20_01_08/products/tidrivers_cc13xx_cc26xx_2_20_01_10/packages</value>
 		</variable>
 		<variable>
-			<name>TOOLS_BLE</name>
+			<name>Tools_BLE</name>
 			<value>${PARENT-5-ORG_PROJ_DIR}/tools</value>
 		</variable>
 	</variableList>
