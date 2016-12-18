@@ -48,6 +48,7 @@
 #include "gapgattserver.h"
 #include "gattservapp.h"
 #include "devinfoservice.h"
+#include "battservice.h"
 
 #if defined(FEATURE_OAD) || defined(IMAGE_INVALIDATE)
 #include "oad_target.h"
@@ -428,6 +429,8 @@ static void HomeAutomation_init(void)
   GGS_AddService(GATT_ALL_SERVICES);           // GAP
   GATTServApp_AddService(GATT_ALL_SERVICES);   // GATT attributes
   DevInfo_AddService();                        // Device Information Service
+  Batt_AddService();                           // Battery Service
+  Batt_Setup(2100, 3000, NULL, NULL);
 
 #ifdef FEATURE_OAD
   VOID OAD_addService();                 // OAD Profile

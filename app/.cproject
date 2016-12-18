@@ -48,12 +48,14 @@
 								<option id="com.ti.ccstudio.buildDefinitions.TMS470_15.12.compilerID.INCLUDE_PATH.101068974" name="Add dir to #include search path (--include_path, -I)" superClass="com.ti.ccstudio.buildDefinitions.TMS470_15.12.compilerID.INCLUDE_PATH" valueType="includePath">
 									<listOptionValue builtIn="false" value="${PROJECT_LOC}/Startup"/>
 									<listOptionValue builtIn="false" value="${PROJECT_LOC}/Application"/>
+									<listOptionValue builtIn="false" value="${PROJECT_LOC}/Profiles"/>
 									<listOptionValue builtIn="false" value="${CG_TOOL_ROOT}/include"/>
 									<listOptionValue builtIn="false" value="${SRC_EX}/inc"/>
 									<listOptionValue builtIn="false" value="${SRC_EX}/icall/inc"/>
 									<listOptionValue builtIn="false" value="${SRC_EX}/profiles/roles/cc26xx"/>
 									<listOptionValue builtIn="false" value="${SRC_EX}/profiles/roles"/>
 									<listOptionValue builtIn="false" value="${SRC_EX}/profiles/dev_info"/>
+									<listOptionValue builtIn="false" value="${SRC_EX}/profiles/hid_dev/cc26xx"/>
 									<listOptionValue builtIn="false" value="${SRC_EX}/common/cc26xx"/>
 									<listOptionValue builtIn="false" value="${SRC_COMMON}/heapmgr"/>
 									<listOptionValue builtIn="false" value="${SRC_BLE_CORE}/controller/cc26xx/inc"/>
