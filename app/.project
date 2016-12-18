@@ -52,11 +52,6 @@
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
-			<name>Profiles</name>
-			<type>2</type>
-			<locationURI>virtual:/virtual</locationURI>
-		</link>
-		<link>
 			<name>Tools</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>

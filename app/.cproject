@@ -151,7 +151,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="Application/rcosc_calibration.c|Middleware|Profiles/oad_target_external_flash.c|Startup/ccfg_app_ble_rcosc.c|Profiles/oad.c|cc26x0f128.cmd|Startup/ST|Board|Tools/cc26xx_app_oad.cmd" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="Profiles/oad_target_external_flash.c|Profiles/oad.c|Middleware|Application/rcosc_calibration.c|Startup/ccfg_app_ble_rcosc.c|cc26x0f128.cmd|Startup/ST|Board|Tools/cc26xx_app_oad.cmd" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -306,7 +306,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="Middleware|Profiles/oad_target_external_flash.c|Profiles/oad.c|cc26x0f128.cmd|Startup/ST|Startup/ccfg_app_ble.c|Board|Tools/cc26xx_app_oad.cmd" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="Profiles/oad_target_external_flash.c|Profiles/oad.c|Middleware|cc26x0f128.cmd|Startup/ST|Startup/ccfg_app_ble.c|Board|Tools/cc26xx_app_oad.cmd" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
