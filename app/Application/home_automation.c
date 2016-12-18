@@ -181,7 +181,7 @@ Char haTaskStack[HA_TASK_STACK_SIZE];
 static uint8_t scanRspData[] =
 {
   // complete name
-  7,   // length of this data
+  12,   // length of this data
   GAP_ADTYPE_LOCAL_NAME_COMPLETE,
   'S',
   'w',
@@ -189,6 +189,11 @@ static uint8_t scanRspData[] =
   't',
   'c',
   'h',
+  '-',
+  'X',
+  'X',
+  'X',
+  'X',
 
   // connection interval range
   5,   // length of this data
@@ -226,7 +231,7 @@ static uint8_t advertData[] =
 };
 
 // GAP GATT Attributes
-static uint8_t attDeviceName[GAP_DEVICE_NAME_LEN] = "Switch";
+static uint8_t attDeviceName[GAP_DEVICE_NAME_LEN] = "Switch-XXXX";
 
 // Globals used for ATT Response retransmission
 static gattMsgEvent_t *pAttRsp = NULL;
@@ -379,8 +384,6 @@ static void HomeAutomation_init(void)
     GAPRole_SetParameter(GAPROLE_ADVERT_OFF_TIME, sizeof(uint16_t),
                          &advertOffTime);
 
-    GAPRole_SetParameter(GAPROLE_SCAN_RSP_DATA, sizeof(scanRspData),
-                         scanRspData);
     GAPRole_SetParameter(GAPROLE_ADVERT_DATA, sizeof(advertData), advertData);
 
     GAPRole_SetParameter(GAPROLE_PARAM_UPDATE_ENABLE, sizeof(uint8_t),
@@ -394,9 +397,6 @@ static void HomeAutomation_init(void)
     GAPRole_SetParameter(GAPROLE_TIMEOUT_MULTIPLIER, sizeof(uint16_t),
                          &desiredConnTimeout);
   }
-
-  // Set the GAP Characteristics
-  GGS_SetParameter(GGS_DEVICE_NAME_ATT, GAP_DEVICE_NAME_LEN, attDeviceName);
 
   // Set advertising interval
   {
@@ -787,6 +787,7 @@ static void HomeAutomation_processStateChangeEvt(gaprole_States_t newState)
       {
         uint8_t ownAddress[B_ADDR_LEN];
         uint8_t systemId[DEVINFO_SYSTEM_ID_LEN];
+        char mac_str[4];
 
         GAPRole_GetParameter(GAPROLE_BD_ADDR, ownAddress);
 
@@ -805,6 +806,20 @@ static void HomeAutomation_processStateChangeEvt(gaprole_States_t newState)
         systemId[5] = ownAddress[3];
 
         DevInfo_SetParameter(DEVINFO_SYSTEM_ID, DEVINFO_SYSTEM_ID_LEN, systemId);
+
+        // Add MAC address to device name
+#define TO_HEX(i) ("0123456789ABCDEF"[i])
+        mac_str[0] = TO_HEX((ownAddress[1] >> 4) & 0x0F);
+        mac_str[1] = TO_HEX(ownAddress[1] & 0x0F);
+        mac_str[2] = TO_HEX((ownAddress[0] >> 4) & 0x0F);
+        mac_str[3] = TO_HEX(ownAddress[0] & 0x0F);
+        memcpy(&scanRspData[9], mac_str, 4);
+        memcpy(&attDeviceName[7], mac_str, 4);
+
+        GAPRole_SetParameter(GAPROLE_SCAN_RSP_DATA, sizeof(scanRspData),
+                             scanRspData);
+        GGS_SetParameter(GGS_DEVICE_NAME_ATT, GAP_DEVICE_NAME_LEN, attDeviceName);
+#undef TO_HEX
 
         // Display device address
         Display_print0(dispHandle, 1, 0, Util_convertBdAddr2Str(ownAddress));
