@@ -61,6 +61,9 @@ extern "C"
  * CONSTANTS
  */
 
+// Min voltage (mV)
+#define BATT_MIN_VOLTAGE            1800
+
 // Max voltage (mV)
 #define BATT_MAX_VOLTAGE            3273
    
@@ -175,15 +178,16 @@ extern bStatus_t Batt_MeasLevel(void);
  * @brief   Set up which ADC source is to be used. Defaults to VDD/3.
  *
  * @param   adc_ch - ADC Channel, e.g. HAL_ADC_CHN_AIN6
- * @param   minVal - max battery level
- * @param   maxVal - min battery level
+ * @param   minVal - min battery level
+ * @param   maxVal - max battery level
  * @param   sCB - HW setup callback
  * @param   tCB - HW tear down callback
  * @param   cCB - percentage calculation callback
  *
  * @return  none.
  */
-extern void Batt_Setup(uint16 maxVal, battServiceSetupCB_t sCB,
+extern void Batt_Setup(uint16 minVal, uint16 maxVal,
+                       battServiceSetupCB_t sCB,
                        battServiceTeardownCB_t tCB);
 
 

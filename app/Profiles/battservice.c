@@ -122,6 +122,9 @@ static battServiceSetupCB_t battServiceSetupCB = NULL;
 // Critical battery level setting.
 static uint8_t battCriticalLevel;
 
+// Minimum battery level.
+static uint16_t battMinLevel = BATT_MIN_VOLTAGE;
+
 // Maximum battery level.
 static uint16_t battMaxLevel = BATT_MAX_VOLTAGE;
 
@@ -428,9 +431,11 @@ bStatus_t Batt_MeasLevel(void)
  *
  * @return  none.
  */
-void Batt_Setup(uint16_t maxVal, battServiceSetupCB_t sCB,
+void Batt_Setup(uint16 minVal, uint16 maxVal,
+                battServiceSetupCB_t sCB,
                 battServiceTeardownCB_t tCB)
 {
+  battMinLevel = minVal;
   battMaxLevel = maxVal;
   battServiceSetupCB = sCB;
   battServiceTeardownCB = tCB;
@@ -603,7 +608,9 @@ static uint8_t battMeasure(void)
   // 5 bits to the right.
   percent = (percent * 125) >> 5;
   // Convert to percentage of maximum voltage.
-  percent = ((percent* 100) / battMaxLevel);
+  percent = ((percent - battMinLevel) * 100) / (battMaxLevel - battMinLevel);
+  // Make sure the value is 1~100%
+  percent = MAX(1, MIN(percent, 100));
 
   // Call measurement teardown callback
   if (battServiceTeardownCB != NULL)
