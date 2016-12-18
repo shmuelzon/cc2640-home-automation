@@ -1,15 +1,5 @@
 /******************************************************************************
 
- @file  simple_peripheral.h
-
- @brief This file contains the Simple BLE Peripheral sample application
-        definitions and prototypes.
-
- Group: WCS, BTS
- Target Device: CC2650, CC2640, CC1350
-
- ******************************************************************************
-
  Copyright (c) 2013-2016, Texas Instruments Incorporated
  All rights reserved.
 
@@ -40,13 +30,10 @@
  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
- ******************************************************************************
- Release Name: ble_sdk_2_02_01_18
- Release Date: 2016-10-26 15:20:04
  *****************************************************************************/
 
-#ifndef SIMPLEBLEPERIPHERAL_H
-#define SIMPLEBLEPERIPHERAL_H
+#ifndef HOMEAUTOMATION_H
+#define HOMEAUTOMATION_H
 
 #ifdef __cplusplus
 extern "C"
@@ -74,9 +61,9 @@ extern "C"
  */
 
 /*
- * Task creation function for the Simple BLE Peripheral.
+ * Task creation function for the Home Automation task.
  */
-extern void SimpleBLEPeripheral_createTask(void);
+extern void HomeAutomation_createTask(void);
 
 
 /*********************************************************************
@@ -86,4 +73,4 @@ extern void SimpleBLEPeripheral_createTask(void);
 }
 #endif
 
-#endif /* SIMPLEBLEPERIPHERAL_H */
+#endif /* HOMEAUTOMATION_H */

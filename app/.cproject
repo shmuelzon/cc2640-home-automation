@@ -54,8 +54,6 @@
 									<listOptionValue builtIn="false" value="${SRC_EX}/profiles/roles/cc26xx"/>
 									<listOptionValue builtIn="false" value="${SRC_EX}/profiles/roles"/>
 									<listOptionValue builtIn="false" value="${SRC_EX}/profiles/dev_info"/>
-									<listOptionValue builtIn="false" value="${SRC_EX}/profiles/simple_profile/cc26xx"/>
-									<listOptionValue builtIn="false" value="${SRC_EX}/profiles/simple_profile"/>
 									<listOptionValue builtIn="false" value="${SRC_EX}/common/cc26xx"/>
 									<listOptionValue builtIn="false" value="${SRC_COMMON}/heapmgr"/>
 									<listOptionValue builtIn="false" value="${SRC_BLE_CORE}/controller/cc26xx/inc"/>
@@ -153,7 +151,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="Application/rcosc_calibration.c|Middleware|Profiles/simplekeys.h|Profiles/oad_target_external_flash.c|Startup/ccfg_app_ble_rcosc.c|Profiles/oad.c|cc26x0f128.cmd|Startup/ST|Board|Tools/cc26xx_app_oad.cmd|Profiles/simplekeys.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="Application/rcosc_calibration.c|Middleware|Profiles/oad_target_external_flash.c|Startup/ccfg_app_ble_rcosc.c|Profiles/oad.c|cc26x0f128.cmd|Startup/ST|Board|Tools/cc26xx_app_oad.cmd" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -308,7 +306,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="Middleware|Profiles/simplekeys.h|Profiles/oad_target_external_flash.c|Profiles/oad.c|cc26x0f128.cmd|Startup/ST|Startup/ccfg_app_ble.c|Board|Profiles/simplekeys.c|Tools/cc26xx_app_oad.cmd" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="Middleware|Profiles/oad_target_external_flash.c|Profiles/oad.c|cc26x0f128.cmd|Startup/ST|Startup/ccfg_app_ble.c|Board|Tools/cc26xx_app_oad.cmd" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>

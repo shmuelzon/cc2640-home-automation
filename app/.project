@@ -272,26 +272,6 @@
 			<locationURI>SRC_EX/profiles/roles/cc26xx/peripheral.h</locationURI>
 		</link>
 		<link>
-			<name>Profiles/simple_gatt_profile.c</name>
-			<type>1</type>
-			<locationURI>SRC_EX/profiles/simple_profile/cc26xx/simple_gatt_profile.c</locationURI>
-		</link>
-		<link>
-			<name>Profiles/simple_gatt_profile.h</name>
-			<type>1</type>
-			<locationURI>SRC_EX/profiles/simple_profile/simple_gatt_profile.h</locationURI>
-		</link>
-		<link>
-			<name>Profiles/simplekeys.c</name>
-			<type>1</type>
-			<locationURI>SRC_EX/profiles/keys/cc26xx/simplekeys.c</locationURI>
-		</link>
-		<link>
-			<name>Profiles/simplekeys.h</name>
-			<type>1</type>
-			<locationURI>SRC_EX/profiles/keys/simplekeys.h</locationURI>
-		</link>
-		<link>
 			<name>Startup/ccfg_app_ble.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-ORG_PROJ_DIR/config/ccfg_app_ble.c</locationURI>

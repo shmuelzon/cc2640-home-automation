@@ -58,7 +58,7 @@
 #include "hal_assert.h"
 #include "bcomdef.h"
 #include "peripheral.h"
-#include "simple_peripheral.h"
+#include "home_automation.h"
 
 /* Header files required to enable instruction fetch cache */
 #include <inc/hw_memmap.h>
@@ -200,7 +200,7 @@ int main()
   /* Kick off profile - Priority 3 */
   GAPRole_createTask();
 
-  SimpleBLEPeripheral_createTask();
+  HomeAutomation_createTask();
 
   /* enable interrupts and start SYS/BIOS */
   BIOS_start();

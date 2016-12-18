@@ -30,9 +30,9 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /** ============================================================================
- *  @file       CC2650DK_4XS.h
+ *  @file       board.h
  *
- *  @brief      CC2650EM_4XS Board Specific header file.
+ *  @brief      Board header file. Based on CC2650DK_4XS.h
  *              The project options should point to this file if this is the
  *              CC2650EM you are developing code for.
  *
@@ -43,8 +43,8 @@
  *
  *  ============================================================================
  */
-#ifndef __CC2650EM_4XS_H__
-#define __CC2650EM_4XS_H__
+#ifndef __BOARD_H__
+#define __BOARD_H__
 
 #ifdef __cplusplus
 extern "C" {
@@ -52,6 +52,7 @@ extern "C" {
 
 /** ============================================================================
  *  Symbol by generic Board.c to include the correct kit specific Board.c
+ *  Needed by ble_user_config.[ch].
  *  ==========================================================================*/
 #define CC2650EM_4XS
 
@@ -74,16 +75,16 @@ extern const PIN_Config BoardGpioInitTable[];
  *      <board signal alias>                <pin mapping>
  */
 /* Leds */
-#define Board_LED_ON                        1 /* LEDs on CC2650 are active high */
+#define Board_LED_ON                        1 /* LEDs are active high */
 #define Board_LED_OFF                       0
-#define Board_DK_LED1                       PIN_UNASSIGNED
-#define Board_DK_LED2                       PIN_UNASSIGNED
-#define Board_DK_LED3                       IOID_5          /* P1.2  */
-#define Board_DK_LED4                       IOID_6          /* P1.4  */
+#define Board_LED1                          PIN_UNASSIGNED
+#define Board_LED2                          PIN_UNASSIGNED
+#define Board_LED3                          PIN_UNASSIGNED
+#define Board_LED4                          PIN_UNASSIGNED
 /* Button Board */
-#define Board_KEY_SELECT                    IOID_7          /* P1.14 */
-#define Board_KEY_UP                        IOID_4          /* P1.10 */
-#define Board_KEY_DOWN                      IOID_3          /* P1.12 */
+#define Board_KEY_SELECT                    PIN_UNASSIGNED
+#define Board_KEY_UP                        PIN_UNASSIGNED
+#define Board_KEY_DOWN                      PIN_UNASSIGNED
 #define Board_KEY_LEFT                      PIN_UNASSIGNED
 #define Board_KEY_RIGHT                     PIN_UNASSIGNED
 /* LCD  Board */
@@ -92,18 +93,18 @@ extern const PIN_Config BoardGpioInitTable[];
 #define Board_LCD_RST                       PIN_UNASSIGNED
 #define Board_LCD_CSN                       PIN_UNASSIGNED
 /* UART Board */
-#define Board_UART_RX                       IOID_1          /* P1.7  */
-#define Board_UART_TX                       IOID_2          /* P1.9  */
+#define Board_UART_RX                       PIN_UNASSIGNED
+#define Board_UART_TX                       PIN_UNASSIGNED
 #define Board_UART_CTS                      PIN_UNASSIGNED
 #define Board_UART_RTS                      PIN_UNASSIGNED
 /* SPI Board */
-#define Board_SPI0_MISO                     IOID_0          /* P1.20 */
-#define Board_SPI0_MOSI                     IOID_9          /* P1.18 */
-#define Board_SPI0_CLK                      IOID_8          /* P1.16 */
+#define Board_SPI0_MISO                     PIN_UNASSIGNED
+#define Board_SPI0_MOSI                     PIN_UNASSIGNED
+#define Board_SPI0_CLK                      PIN_UNASSIGNED
 #define Board_SPI0_CSN                      PIN_UNASSIGNED
 /* PWM outputs */
-#define Board_PWMPIN0                       Board_DK_LED3
-#define Board_PWMPIN1                       Board_DK_LED4
+#define Board_PWMPIN0                       PIN_UNASSIGNED
+#define Board_PWMPIN1                       PIN_UNASSIGNED
 #define Board_PWMPIN2                       PIN_UNASSIGNED
 #define Board_PWMPIN3                       PIN_UNASSIGNED
 #define Board_PWMPIN4                       PIN_UNASSIGNED
@@ -115,131 +116,131 @@ extern const PIN_Config BoardGpioInitTable[];
  *  Instance identifiers
  *  ==========================================================================*/
 /* Generic SPI instance identifiers */
-#define Board_SPI0                  CC2650DK_4XS_SPI0
+#define Board_SPI0                  CC26XX_SPI0
 /* Generic UART instance identifiers */
-#define Board_UART                  CC2650DK_4XS_UART0
+#define Board_UART                  CC26XX_UART0
 /* Generic Crypto instance identifiers */
-#define Board_CRYPTO                CC2650DK_4XS_CRYPTO0
+#define Board_CRYPTO                CC26XX_CRYPTO0
 /* Generic GPTimer instance identifiers */
-#define Board_GPTIMER0A             CC2650DK_4XS_GPTIMER0A
-#define Board_GPTIMER0B             CC2650DK_4XS_GPTIMER0B
-#define Board_GPTIMER1A             CC2650DK_4XS_GPTIMER1A
-#define Board_GPTIMER1B             CC2650DK_4XS_GPTIMER1B
-#define Board_GPTIMER2A             CC2650DK_4XS_GPTIMER2A
-#define Board_GPTIMER2B             CC2650DK_4XS_GPTIMER2B
-#define Board_GPTIMER3A             CC2650DK_4XS_GPTIMER3A
-#define Board_GPTIMER3B             CC2650DK_4XS_GPTIMER3B
+#define Board_GPTIMER0A             CC26XX_GPTIMER0A
+#define Board_GPTIMER0B             CC26XX_GPTIMER0B
+#define Board_GPTIMER1A             CC26XX_GPTIMER1A
+#define Board_GPTIMER1B             CC26XX_GPTIMER1B
+#define Board_GPTIMER2A             CC26XX_GPTIMER2A
+#define Board_GPTIMER2B             CC26XX_GPTIMER2B
+#define Board_GPTIMER3A             CC26XX_GPTIMER3A
+#define Board_GPTIMER3B             CC26XX_GPTIMER3B
 /* Generic PWM instance identifiers */
-#define Board_PWM0                  CC2650DK_4XS_PWM0
-#define Board_PWM1                  CC2650DK_4XS_PWM1
-#define Board_PWM2                  CC2650DK_4XS_PWM2
-#define Board_PWM3                  CC2650DK_4XS_PWM3
-#define Board_PWM4                  CC2650DK_4XS_PWM4
-#define Board_PWM5                  CC2650DK_4XS_PWM5
-#define Board_PWM6                  CC2650DK_4XS_PWM6
-#define Board_PWM7                  CC2650DK_4XS_PWM7
-/* Generic TRNG instance identiifer */
-#define Board_TRNG                  CC2650DK_4XS_TRNG0
+#define Board_PWM0                  CC26XX_PWM0
+#define Board_PWM1                  CC26XX_PWM1
+#define Board_PWM2                  CC26XX_PWM2
+#define Board_PWM3                  CC26XX_PWM3
+#define Board_PWM4                  CC26XX_PWM4
+#define Board_PWM5                  CC26XX_PWM5
+#define Board_PWM6                  CC26XX_PWM6
+#define Board_PWM7                  CC26XX_PWM7
+/* Generic TRNG instance identifier */
+#define Board_TRNG                  CC26XX_TRNG0
 
 /** ============================================================================
  *  Number of peripherals and their names
  *  ==========================================================================*/
 
 /*!
- *  @def    CC2650DK_4XS_CryptoName
- *  @brief  Enum of Crypto names on the CC2650 dev board
+ *  @def    CC26XX_CryptoName
+ *  @brief  Enum of Crypto names on the board
  */
-typedef enum CC2650DK_4XS_CryptoName {
-    CC2650DK_4XS_CRYPTO0 = 0,
-    CC2650DK_4XS_CRYPTOCOUNT
-} CC2650DK_4XS_CryptoName;
+typedef enum CC26XX_CryptoName {
+    CC26XX_CRYPTO0 = 0,
+    CC26XX_CRYPTOCOUNT
+} CC26XX_CryptoName;
 
 /*!
- *  @def    CC2650DK_4XS_SPIName
- *  @brief  Enum of SPI names on the CC2650 dev board
+ *  @def    CC26XX_SPIName
+ *  @brief  Enum of SPI names on the board
  */
-typedef enum CC2650DK_4XS_SPIName {
-    CC2650DK_4XS_SPI0 = 0,
-    CC2650DK_4XS_SPICOUNT
-} CC2650DK_4XS_SPIName;
+typedef enum CC26XX_SPIName {
+    CC26XX_SPI0 = 0,
+    CC26XX_SPICOUNT
+} CC26XX_SPIName;
 
 /*!
- *  @def    CC2650DK_4XS_TRNGName
+ *  @def    CC26XX_TRNGName
  *  @brief  Enum of TRNG names on the board
  */
-typedef enum CC2650DK_4XS_TRNGName {
-    CC2650DK_4XS_TRNG0 = 0,
-    CC2650DK_4XS_TRNGCOUNT
-} CC2650DK_4XS_TRNGName;
+typedef enum CC26XX_TRNGName {
+    CC26XX_TRNG0 = 0,
+    CC26XX_TRNGCOUNT
+} CC26XX_TRNGName;
 
 /*!
- *  @def    CC2650DK_4XS_UARTName
+ *  @def    CC26XX_UARTName
  *  @brief  Enum of UARTs on the CC2650 dev board
  */
-typedef enum CC2650DK_4XS_UARTName {
-    CC2650DK_4XS_UART0 = 0,
-    CC2650DK_4XS_UARTCOUNT
-} CC2650DK_4XS_UARTName;
+typedef enum CC26XX_UARTName {
+    CC26XX_UART0 = 0,
+    CC26XX_UARTCOUNT
+} CC26XX_UARTName;
 
 /*!
- *  @def    CC2650DK_4XS_UdmaName
+ *  @def    CC26XX_UdmaName
  *  @brief  Enum of DMA buffers
  */
-typedef enum CC2650DK_4XS_UdmaName {
-    CC2650DK_4XS_UDMA0 = 0,
-    CC2650DK_4XS_UDMACOUNT
-} CC2650DK_4XS_UdmaName;
+typedef enum CC26XX_UdmaName {
+    CC26XX_UDMA0 = 0,
+    CC26XX_UDMACOUNT
+} CC26XX_UdmaName;
 
 /*!
- *  @def    CC2650DK_4XS_GPTimerName
+ *  @def    CC26XX_GPTimerName
  *  @brief  Enum of GPTimer parts
  */
-typedef enum CC2650DK_4XS_GPTimerName
+typedef enum CC26XX_GPTimerName
 {
-    CC2650DK_4XS_GPTIMER0A = 0,
-    CC2650DK_4XS_GPTIMER0B,
-    CC2650DK_4XS_GPTIMER1A,
-    CC2650DK_4XS_GPTIMER1B,
-    CC2650DK_4XS_GPTIMER2A,
-    CC2650DK_4XS_GPTIMER2B,
-    CC2650DK_4XS_GPTIMER3A,
-    CC2650DK_4XS_GPTIMER3B,
-    CC2650DK_4XS_GPTIMERPARTSCOUNT
-} CC2650DK_4XS_GPTimerName;
+    CC26XX_GPTIMER0A = 0,
+    CC26XX_GPTIMER0B,
+    CC26XX_GPTIMER1A,
+    CC26XX_GPTIMER1B,
+    CC26XX_GPTIMER2A,
+    CC26XX_GPTIMER2B,
+    CC26XX_GPTIMER3A,
+    CC26XX_GPTIMER3B,
+    CC26XX_GPTIMERPARTSCOUNT
+} CC26XX_GPTimerName;
 
 /*!
- *  @def    CC2650DK_4XS_GPTimers
+ *  @def    CC26XX_GPTimers
  *  @brief  Enum of GPTimers
  */
-typedef enum CC2650DK_4XS_GPTimers
+typedef enum CC26XX_GPTimers
 {
-    CC2650DK_4XS_GPTIMER0 = 0,
-    CC2650DK_4XS_GPTIMER1,
-    CC2650DK_4XS_GPTIMER2,
-    CC2650DK_4XS_GPTIMER3,
-    CC2650DK_4XS_GPTIMERCOUNT
-} CC2650DK_4XS_GPTimers;
+    CC26XX_GPTIMER0 = 0,
+    CC26XX_GPTIMER1,
+    CC26XX_GPTIMER2,
+    CC26XX_GPTIMER3,
+    CC26XX_GPTIMERCOUNT
+} CC26XX_GPTimers;
 
 /*!
- *  @def    CC2650DK_4XS_PWM
+ *  @def    CC26XX_PWM
  *  @brief  Enum of PWM outputs on the board
  */
-typedef enum CC2650DK_4XS_PWM
+typedef enum CC26XX_PWM
 {
-    CC2650DK_4XS_PWM0 = 0,
-    CC2650DK_4XS_PWM1,
-    CC2650DK_4XS_PWM2,
-    CC2650DK_4XS_PWM3,
-    CC2650DK_4XS_PWM4,
-    CC2650DK_4XS_PWM5,
-    CC2650DK_4XS_PWM6,
-    CC2650DK_4XS_PWM7,
-    CC2650DK_4XS_PWMCOUNT
-} CC2650DK_4XS_PWM;
+    CC26XX_PWM0 = 0,
+    CC26XX_PWM1,
+    CC26XX_PWM2,
+    CC26XX_PWM3,
+    CC26XX_PWM4,
+    CC26XX_PWM5,
+    CC26XX_PWM6,
+    CC26XX_PWM7,
+    CC26XX_PWMCOUNT
+} CC26XX_PWM;
 
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* __CC2650EM_H__ */
+#endif /* __BOARD_H__ */
