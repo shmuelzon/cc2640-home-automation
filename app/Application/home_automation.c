@@ -50,6 +50,7 @@
 #include "devinfoservice.h"
 #include "battservice.h"
 #include "relayservice.h"
+#include "switchservice.h"
 
 #if defined(FEATURE_OAD) || defined(IMAGE_INVALIDATE)
 #include "oad_target.h"
@@ -139,12 +140,18 @@
 #define HA_CONN_EVT_END_EVT                   (1 << 1)
 #define HA_RELAY_STATE_CHANGED_EVT            (1 << 2)
 #define HA_RELAY_CLEAR_GPIO_EVT               (1 << 3)
+#define HA_GPIO_DEBOUNCE_EVT                  (1 << 4)
+#define HA_TOGGLE_OWN_RELAY_CHANGED_EVT       (1 << 5)
 
 // Pulse length to set/reset the relay
 #define HA_RELAY_PULSE_TIME                   10
 
+// Debounce timeout before reading GPIO state (in milliseconds)
+#define HA_DEBOUNCE_TIME                      25
+
 // Simple Non-Volatile (SNV) sections
 #define HA_SNV_RELAY_STATE                    (BLE_NVID_CUST_START + 0)
+#define HA_SNV_TOGGLE_OWN_RELAY               (BLE_NVID_CUST_START + 1)
 
 /*********************************************************************
  * TYPEDEFS
@@ -175,6 +182,7 @@ static ICall_Semaphore sem;
 
 // Clock instances
 static Clock_Struct periodRelay;
+static Clock_Struct periodDebounce;
 
 // Queue object used for app messages
 static Queue_Struct appMsg;
@@ -275,6 +283,7 @@ static void HomeAutomation_stateChangeCB(gaprole_States_t newState);
 static void HomeAutomation_enqueueMsg(uint8_t event, uint8_t state);
 
 static void HomeAutomation_clockCb(UArg arg);
+static void HomeAutomation_intCb(PIN_Handle handle, PIN_Id pinId);
 
 #ifdef FEATURE_OAD
 void HomeAutomation_processOadWriteCB(uint8_t event, uint16_t connHandle,
@@ -309,6 +318,7 @@ static oadTargetCBs_t HomeAutomation_oadCBs =
 #endif //FEATURE_OAD
 
 static void HomeAutomation_RelayStateChangeCB(void);
+static void HomeAutomation_ToggleOwnRelayChangeCB(void);
 
 /*********************************************************************
  * PUBLIC FUNCTIONS
@@ -385,9 +395,13 @@ static void HomeAutomation_init(void)
   // Create clocks
   Util_constructClock(&periodRelay, HomeAutomation_clockCb,
     HA_RELAY_PULSE_TIME, 0, false, HA_RELAY_CLEAR_GPIO_EVT);
+  Util_constructClock(&periodDebounce, HomeAutomation_clockCb,
+    HA_DEBOUNCE_TIME, 0, false, HA_GPIO_DEBOUNCE_EVT);
 
   // Setup GPIO
   PIN_open(&haPinState, BoardGpioInitTable);
+  PIN_registerIntCb(&haPinState, HomeAutomation_intCb);
+  PIN_setInterrupt(&haPinState, Board_SWITCH | PIN_IRQ_BOTHEDGES);
 
   dispHandle = Display_open(Display_Type_LCD, NULL);
 
@@ -483,6 +497,21 @@ static void HomeAutomation_init(void)
     if (osal_snv_read(HA_SNV_RELAY_STATE, sizeof(relayState), &relayState) == NV_OPER_FAILED)
        relayState = 0xFF;
     Relay_SetParameter(RELAY_PARAM_STATE, sizeof(relayState), &relayState);
+  }
+
+  // Switch service
+  {
+    uint8_t switchState, toggleOwnRelay;
+
+    Switch_AddService();
+    Switch_Setup(HomeAutomation_ToggleOwnRelayChangeCB);
+    // Set current state of switch
+    switchState = PIN_getInputValue(Board_SWITCH);
+    Switch_SetParameter(SWITCH_PARAM_STATE, 1, &switchState);
+    // Load configuration from persistent storage
+    if (osal_snv_read(HA_SNV_TOGGLE_OWN_RELAY, sizeof(toggleOwnRelay), &toggleOwnRelay) == NV_OPER_FAILED)
+      toggleOwnRelay = 1;
+    Switch_SetParameter(SWITCH_PARAM_TOGGLE_OWN_RELAY, sizeof(toggleOwnRelay), &toggleOwnRelay);
   }
 
   // Start the Device
@@ -621,6 +650,46 @@ static void HomeAutomation_taskFxn(UArg a0, UArg a1)
       events &= ~HA_RELAY_CLEAR_GPIO_EVT;
 
       HomeAutomation_RelayStateStop();
+    }
+
+    if (events & HA_GPIO_DEBOUNCE_EVT)
+    {
+      uint8_t prev, cur;
+
+      events &= ~HA_GPIO_DEBOUNCE_EVT;
+
+      Switch_GetParameter(SWITCH_PARAM_STATE, &prev);
+      cur = PIN_getInputValue(Board_SWITCH);
+
+      if (prev != cur)
+      {
+        uint8_t doToggle;
+
+        // Save new switch state
+        Switch_SetParameter(SWITCH_PARAM_STATE, 1, &cur);
+
+        // Check if we need to toggle the relay
+        Switch_GetParameter(SWITCH_PARAM_TOGGLE_OWN_RELAY, &doToggle);
+        if (doToggle)
+        {
+          uint8_t relayState;
+
+          Relay_GetParameter(RELAY_PARAM_STATE, &relayState);
+          relayState = !relayState;
+          Relay_SetParameter(RELAY_PARAM_STATE, sizeof(relayState), &relayState);
+          HomeAutomation_RelayStateSet(relayState);
+        }
+      }
+    }
+
+    if (events & HA_TOGGLE_OWN_RELAY_CHANGED_EVT)
+    {
+      uint8_t setting;
+
+      events &= ~HA_TOGGLE_OWN_RELAY_CHANGED_EVT;
+
+      Switch_GetParameter(SWITCH_PARAM_TOGGLE_OWN_RELAY, &setting);
+      osal_snv_write(HA_SNV_TOGGLE_OWN_RELAY, sizeof(setting), &setting);
     }
   }
 }
@@ -1146,6 +1215,40 @@ static void HomeAutomation_RelayStateStop(void)
   // Reset both GPIOs
   PIN_setOutputValue(&haPinState, Board_RELAY_SET, 0);
   PIN_setOutputValue(&haPinState, Board_RELAY_RESET, 0);
+}
+
+/*********************************************************************
+ * @fn      HomeAutomation_intCb
+ *
+ * @brief   Callback function to be called on GPIO interrupt.
+ *
+ * @param   handle - Pin driver handle.
+ * @param   pinId - Pin ID.
+ *
+ * @return  None.
+ */
+static void HomeAutomation_intCb(PIN_Handle handle, PIN_Id pinId)
+{
+  // Interrupt was triggered, start debouce timer
+  if (pinId == Board_SWITCH)
+    Util_startClock(&periodDebounce);
+}
+
+/*********************************************************************
+ * @fn      HomeAutomation_ToggleOwnRelayChangeCB
+ *
+ * @brief   Callback function to be called when the toggleOwnRelay
+ *          setting is changed.
+ *
+ * @return  None.
+ */
+static void HomeAutomation_ToggleOwnRelayChangeCB(void)
+{
+  // Store the event.
+  events |= HA_TOGGLE_OWN_RELAY_CHANGED_EVT;
+
+  // Wake up the application.
+  Semaphore_post(sem);
 }
 
 /*********************************************************************
