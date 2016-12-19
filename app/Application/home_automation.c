@@ -49,6 +49,7 @@
 #include "gattservapp.h"
 #include "devinfoservice.h"
 #include "battservice.h"
+#include "relayservice.h"
 
 #if defined(FEATURE_OAD) || defined(IMAGE_INVALIDATE)
 #include "oad_target.h"
@@ -136,6 +137,14 @@
 // Internal Events for RTOS application
 #define HA_STATE_CHANGE_EVT                   (1 << 0)
 #define HA_CONN_EVT_END_EVT                   (1 << 1)
+#define HA_RELAY_STATE_CHANGED_EVT            (1 << 2)
+#define HA_RELAY_CLEAR_GPIO_EVT               (1 << 3)
+
+// Pulse length to set/reset the relay
+#define HA_RELAY_PULSE_TIME                   10
+
+// Simple Non-Volatile (SNV) sections
+#define HA_SNV_RELAY_STATE                    (BLE_NVID_CUST_START + 0)
 
 /*********************************************************************
  * TYPEDEFS
@@ -164,6 +173,9 @@ static ICall_EntityID selfEntity;
 // Semaphore globally used to post events to the application thread
 static ICall_Semaphore sem;
 
+// Clock instances
+static Clock_Struct periodRelay;
+
 // Queue object used for app messages
 static Queue_Struct appMsg;
 static Queue_Handle appMsgQueue;
@@ -173,6 +185,9 @@ static Queue_Handle appMsgQueue;
 static Queue_Struct oadQ;
 static Queue_Handle hOadQ;
 #endif //FEATURE_OAD
+
+// events flag for internal application events.
+static uint16_t events;
 
 // Task configuration
 Task_Struct haTask;
@@ -238,6 +253,9 @@ static uint8_t attDeviceName[GAP_DEVICE_NAME_LEN] = "Switch-XXXX";
 static gattMsgEvent_t *pAttRsp = NULL;
 static uint8_t rspTxRetry = 0;
 
+// GPIOs
+static PIN_State haPinState;
+
 /*********************************************************************
  * LOCAL FUNCTIONS
  */
@@ -256,11 +274,15 @@ static void HomeAutomation_freeAttRsp(uint8_t status);
 static void HomeAutomation_stateChangeCB(gaprole_States_t newState);
 static void HomeAutomation_enqueueMsg(uint8_t event, uint8_t state);
 
+static void HomeAutomation_clockCb(UArg arg);
+
 #ifdef FEATURE_OAD
 void HomeAutomation_processOadWriteCB(uint8_t event, uint16_t connHandle,
                                            uint8_t *pData);
 #endif //FEATURE_OAD
 
+static void HomeAutomation_RelayStateSet(uint8_t on);
+static void HomeAutomation_RelayStateStop(void);
 
 /*********************************************************************
  * PROFILE CALLBACKS
@@ -285,6 +307,8 @@ static oadTargetCBs_t HomeAutomation_oadCBs =
   HomeAutomation_processOadWriteCB // Write Callback.
 };
 #endif //FEATURE_OAD
+
+static void HomeAutomation_RelayStateChangeCB(void);
 
 /*********************************************************************
  * PUBLIC FUNCTIONS
@@ -357,6 +381,13 @@ static void HomeAutomation_init(void)
 
   // Create an RTOS queue for message from profile to be sent to app.
   appMsgQueue = Util_constructQueue(&appMsg);
+
+  // Create clocks
+  Util_constructClock(&periodRelay, HomeAutomation_clockCb,
+    HA_RELAY_PULSE_TIME, 0, false, HA_RELAY_CLEAR_GPIO_EVT);
+
+  // Setup GPIO
+  PIN_open(&haPinState, BoardGpioInitTable);
 
   dispHandle = Display_open(Display_Type_LCD, NULL);
 
@@ -441,6 +472,18 @@ static void HomeAutomation_init(void)
 #ifdef IMAGE_INVALIDATE
   Reset_addService();
 #endif //IMAGE_INVALIDATE
+
+  // Relay service
+  {
+    uint8_t relayState;
+
+    Relay_AddService();
+    Relay_Setup(HomeAutomation_RelayStateChangeCB);
+    // Load last state from persistent storage
+    if (osal_snv_read(HA_SNV_RELAY_STATE, sizeof(relayState), &relayState) == NV_OPER_FAILED)
+       relayState = 0xFF;
+    Relay_SetParameter(RELAY_PARAM_STATE, sizeof(relayState), &relayState);
+  }
 
   // Start the Device
   VOID GAPRole_StartDevice(&HomeAutomation_gapRoleCBs);
@@ -562,6 +605,23 @@ static void HomeAutomation_taskFxn(UArg a0, UArg a1)
       ICall_free(oadWriteEvt);
     }
 #endif //FEATURE_OAD
+
+    if (events & HA_RELAY_STATE_CHANGED_EVT)
+    {
+      uint8_t state;
+
+      events &= ~HA_RELAY_STATE_CHANGED_EVT;
+
+      Relay_GetParameter(RELAY_PARAM_STATE, &state);
+      HomeAutomation_RelayStateSet(state);
+    }
+
+    if (events & HA_RELAY_CLEAR_GPIO_EVT)
+    {
+      events &= ~HA_RELAY_CLEAR_GPIO_EVT;
+
+      HomeAutomation_RelayStateStop();
+    }
   }
 }
 
@@ -1010,6 +1070,82 @@ static void HomeAutomation_enqueueMsg(uint8_t event, uint8_t state)
     // Enqueue the message.
     Util_enqueueMsg(appMsgQueue, sem, (uint8*)pMsg);
   }
+}
+
+/*********************************************************************
+ * @fn      HomeAutomation_clockCb
+ *
+ * @brief   Handler function for clock timeouts.
+ *
+ * @param   arg - event type
+ *
+ * @return  None.
+ */
+static void HomeAutomation_clockCb(UArg arg)
+{
+  // Store the event.
+  events |= arg;
+
+  // Wake up the application.
+  Semaphore_post(sem);
+}
+
+/*********************************************************************
+ * @fn      HomeAutomation_RelayStateChangeCB
+ *
+ * @brief   Callback function to be called when relay state is changed.
+ *
+ * @return  None.
+ */
+static void HomeAutomation_RelayStateChangeCB(void)
+{
+  // Store the event.
+  events |= HA_RELAY_STATE_CHANGED_EVT;
+
+  // Wake up the application.
+  Semaphore_post(sem);
+}
+
+/*********************************************************************
+ * @fn      HomeAutomation_RelayStateSet
+ *
+ * @brief   Start setting the relay to the defined state.
+ *
+ * @param   on - the state to set the relay.
+ *
+ * @return  None.
+ */
+static void HomeAutomation_RelayStateSet(uint8_t on)
+{
+  if (Util_isActive(&periodRelay))
+    Util_stopClock(&periodRelay);
+
+  // Reset both GPIOs
+  PIN_setOutputValue(&haPinState, Board_RELAY_SET, 0);
+  PIN_setOutputValue(&haPinState, Board_RELAY_RESET, 0);
+
+  // Set only relevant GPIO
+  PIN_setOutputValue(&haPinState, on ? Board_RELAY_SET : Board_RELAY_RESET, 1);
+
+  // Start a timer to reset the GPIOs
+  Util_startClock(&periodRelay);
+
+  // Save new state in persistent storage
+  osal_snv_write(HA_SNV_RELAY_STATE, sizeof(on), &on);
+}
+
+/*********************************************************************
+ * @fn      HomeAutomation_RelayStateStop
+ *
+ * @brief   Finish setting the relay state.
+ *
+ * @return  None.
+ */
+static void HomeAutomation_RelayStateStop(void)
+{
+  // Reset both GPIOs
+  PIN_setOutputValue(&haPinState, Board_RELAY_SET, 0);
+  PIN_setOutputValue(&haPinState, Board_RELAY_RESET, 0);
 }
 
 /*********************************************************************

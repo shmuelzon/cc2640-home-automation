@@ -66,6 +66,8 @@
 #endif
 
 const PIN_Config BoardGpioInitTable[] = {
+    Board_RELAY_SET | PIN_GPIO_OUTPUT_EN | PIN_GPIO_LOW | PIN_PUSHPULL,
+    Board_RELAY_RESET | PIN_GPIO_OUTPUT_EN | PIN_GPIO_LOW | PIN_PUSHPULL,
     PIN_TERMINATE /* Terminate list */
 };
 
