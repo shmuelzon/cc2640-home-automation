@@ -84,8 +84,8 @@
  * CONSTANTS
  */
 
-// Advertising interval when device is discoverable (units of 625us, 160=100ms)
-#define DEFAULT_ADVERTISING_INTERVAL          160
+// Advertising interval when device is discoverable (units of 625us, 1600=1s)
+#define DEFAULT_ADVERTISING_INTERVAL          1600
 
 // Limited discoverable mode advertises for 30.72s, and then stops
 // General discoverable mode advertises indefinitely
@@ -96,9 +96,9 @@
 // parameter update request is enabled
 #define DEFAULT_DESIRED_MIN_CONN_INTERVAL     80
 
-// Maximum connection interval (units of 1.25ms, 800=1000ms) if automatic
+// Maximum connection interval (units of 1.25ms, 200=250ms) if automatic
 // parameter update request is enabled
-#define DEFAULT_DESIRED_MAX_CONN_INTERVAL     800
+#define DEFAULT_DESIRED_MAX_CONN_INTERVAL     200
 #else //!FEATURE_OAD
 // Minimum connection interval (units of 1.25ms, 8=10ms) if automatic
 // parameter update request is enabled
@@ -110,7 +110,7 @@
 #endif // FEATURE_OAD
 
 // Slave latency to use if automatic parameter update request is enabled
-#define DEFAULT_DESIRED_SLAVE_LATENCY         0
+#define DEFAULT_DESIRED_SLAVE_LATENCY         3
 
 // Supervision timeout value (units of 10ms, 1000=10s) if automatic parameter
 // update request is enabled
@@ -224,7 +224,7 @@ static uint8_t scanRspData[] =
   GAP_ADTYPE_SLAVE_CONN_INTERVAL_RANGE,
   LO_UINT16(DEFAULT_DESIRED_MIN_CONN_INTERVAL),   // 100ms
   HI_UINT16(DEFAULT_DESIRED_MIN_CONN_INTERVAL),
-  LO_UINT16(DEFAULT_DESIRED_MAX_CONN_INTERVAL),   // 1s
+  LO_UINT16(DEFAULT_DESIRED_MAX_CONN_INTERVAL),   // 250ms
   HI_UINT16(DEFAULT_DESIRED_MAX_CONN_INTERVAL),
 
   // Tx power level
