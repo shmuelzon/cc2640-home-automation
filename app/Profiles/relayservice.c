@@ -108,7 +108,7 @@ static gattAttribute_t relayAttrTbl[] =
       // Relay State Value
       {
         { ATT_BT_UUID_SIZE, relayStateUUID },
-        GATT_PERMIT_READ | GATT_PERMIT_WRITE,
+        GATT_PERMIT_AUTHEN_READ | GATT_PERMIT_AUTHEN_WRITE,
         0,
         &relayState
       },

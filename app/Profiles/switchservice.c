@@ -125,7 +125,7 @@ static gattAttribute_t switchAttrTbl[] =
       // Switch State Value
       {
         { ATT_BT_UUID_SIZE, switchStateUUID },
-        GATT_PERMIT_READ,
+        GATT_PERMIT_AUTHEN_READ,
         0,
         &switchState
       },
@@ -157,7 +157,7 @@ static gattAttribute_t switchAttrTbl[] =
       // Toggle Own Relay Value
       {
         { ATT_BT_UUID_SIZE, toggleOwnRelayUUID },
-        GATT_PERMIT_READ | GATT_PERMIT_WRITE,
+        GATT_PERMIT_AUTHEN_READ | GATT_PERMIT_AUTHEN_WRITE,
         0,
         &toggleOwnRelay
       },
