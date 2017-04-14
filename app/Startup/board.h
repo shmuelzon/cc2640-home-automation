@@ -54,7 +54,17 @@ extern "C" {
  *  Symbol by generic Board.c to include the correct kit specific Board.c
  *  Needed by ble_user_config.[ch].
  *  ==========================================================================*/
+#if defined(CC2650_LAUNCHXL) || defined(CC2650DK_7ID) || defined(CC2650RC) || defined(CC2650STK)
+#define CC2650EM_7ID
+#elif defined(BOOSTXL_CC2650MA)
+#define CC2650M5A
+#elif defined(CC2650DK_5XD)
+#define CC2650EM_5XD
+#elif defined(CC2650DK_4XS)
 #define CC2650EM_4XS
+#else
+#error Unkown board definition
+#endif
 
 /** ============================================================================
  *  Includes
