@@ -154,6 +154,15 @@
 #define HA_SNV_RELAY_STATE                    (BLE_NVID_CUST_START + 0)
 #define HA_SNV_TOGGLE_OWN_RELAY               (BLE_NVID_CUST_START + 1)
 
+#if Board_RELAY_SET != PIN_UNASSIGNED || Board_SWITCH != PIN_UNASSIGNED
+#define NAME 'S', 'w', 'i', 't', 'c', 'h'
+#define NAME_LEN 6
+#elif Board_CONTACT != PIN_UNASSIGNED
+#define NAME 'C', 'o', 'n', 't', 'a', 'c', 't'
+#define NAME_LEN 7
+#else
+#error No Name defined for device
+#endif
 /*********************************************************************
  * TYPEDEFS
  */
@@ -206,14 +215,9 @@ Char haTaskStack[HA_TASK_STACK_SIZE];
 static uint8_t scanRspData[] =
 {
   // complete name
-  12,   // length of this data
+  NAME_LEN + 6,   // length of this data
   GAP_ADTYPE_LOCAL_NAME_COMPLETE,
-  'S',
-  'w',
-  'i',
-  't',
-  'c',
-  'h',
+  NAME,
   '-',
   'X',
   'X',
@@ -256,7 +260,8 @@ static uint8_t advertData[] =
 };
 
 // GAP GATT Attributes
-static uint8_t attDeviceName[GAP_DEVICE_NAME_LEN] = "Switch-XXXX";
+static uint8_t attDeviceName[GAP_DEVICE_NAME_LEN] =
+  { NAME, '-', 'X', 'X', 'X', 'X' };
 
 // Globals used for ATT Response retransmission
 static gattMsgEvent_t *pAttRsp = NULL;
@@ -553,12 +558,12 @@ static void HomeAutomation_init(void)
 
 #if defined FEATURE_OAD
 #if defined (HAL_IMAGE_A)
-  Display_print0(dispHandle, 0, 0, "Switch A");
+  Display_print0(dispHandle, 0, 0, ((char []){ NAME, ' ', 'A', '\0' }));
 #else
-  Display_print0(dispHandle, 0, 0, "Switch B");
+  Display_print0(dispHandle, 0, 0, ((char []){ NAME, ' ', 'B', '\0' }));
 #endif // HAL_IMAGE_A
 #else
-  Display_print0(dispHandle, 0, 0, "Switch");
+  Display_print0(dispHandle, 0, 0, ((char []){ NAME, '\0' }));
 #endif // FEATURE_OAD
 }
 
@@ -982,8 +987,8 @@ static void HomeAutomation_processStateChangeEvt(gaprole_States_t newState)
         mac_str[1] = TO_HEX(ownAddress[1] & 0x0F);
         mac_str[2] = TO_HEX((ownAddress[0] >> 4) & 0x0F);
         mac_str[3] = TO_HEX(ownAddress[0] & 0x0F);
-        memcpy(&scanRspData[9], mac_str, 4);
-        memcpy(&attDeviceName[7], mac_str, 4);
+        memcpy(&scanRspData[2 + NAME_LEN + 1], mac_str, 4);
+        memcpy(&attDeviceName[NAME_LEN + 1], mac_str, 4);
 
         GAPRole_SetParameter(GAPROLE_SCAN_RSP_DATA, sizeof(scanRspData),
                              scanRspData);
