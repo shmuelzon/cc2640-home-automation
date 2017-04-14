@@ -126,6 +126,7 @@ extern const PIN_Config BoardGpioInitTable[];
 #define Board_RELAY_RESET                   IOID_8
 /* Sensors */
 #define Board_SWITCH                        IOID_5
+#define Board_CONTACT                       PIN_UNASSIGNED
 
 /** ============================================================================
  *  Instance identifiers

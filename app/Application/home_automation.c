@@ -51,6 +51,7 @@
 #include "battservice.h"
 #include "relayservice.h"
 #include "switchservice.h"
+#include "contactsensorservice.h"
 
 #if defined(FEATURE_OAD) || defined(IMAGE_INVALIDATE)
 #include "oad_target.h"
@@ -523,6 +524,19 @@ static void HomeAutomation_init(void)
   }
 #endif
 
+#if Board_CONTACT != PIN_UNASSIGNED
+  {
+    uint8_t contactSensorState;
+
+    ContactSensor_AddService();
+    contactSensorState = PIN_getInputValue(Board_CONTACT);
+    // Set up interrupts on contact sensor
+    PIN_setInterrupt(&haPinState, Board_CONTACT | PIN_IRQ_BOTHEDGES);
+    // Set current state of contact sensor
+    ContactSensor_SetParameter(CONTACT_SENSOR_PARAM_STATE, 1, &contactSensorState);
+  }
+#endif
+
   // Start the Device
   VOID GAPRole_StartDevice(&HomeAutomation_gapRoleCBs);
 
@@ -693,6 +707,15 @@ static void HomeAutomation_taskFxn(UArg a0, UArg a1)
           HomeAutomation_RelayStateSet(relayState);
         }
       }
+#endif
+
+#if Board_CONTACT != PIN_UNASSIGNED
+      ContactSensor_GetParameter(CONTACT_SENSOR_PARAM_STATE, &prev);
+      cur = PIN_getInputValue(Board_CONTACT);
+
+      // Save new contact sensor state
+      if (prev != cur)
+        ContactSensor_SetParameter(CONTACT_SENSOR_PARAM_STATE, 1, &cur);
 #endif
     }
 
@@ -1245,8 +1268,8 @@ static void HomeAutomation_RelayStateStop(void)
  */
 static void HomeAutomation_intCb(PIN_Handle handle, PIN_Id pinId)
 {
-  // Interrupt was triggered, start debouce timer
-  if (pinId == Board_SWITCH)
+  // Interrupt was triggered, start debounce timer
+  if (pinId == Board_SWITCH || pinId == Board_CONTACT)
     Util_startClock(&periodDebounce);
 }
 

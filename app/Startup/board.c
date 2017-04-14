@@ -75,6 +75,9 @@ const PIN_Config BoardGpioInitTable[] = {
 #if Board_SWITCH != PIN_UNASSIGNED
     Board_SWITCH | PIN_INPUT_EN | PIN_HYSTERESIS,
 #endif
+#if Board_CONTACT != PIN_UNASSIGNED
+    Board_CONTACT | PIN_INPUT_EN | PIN_HYSTERESIS,
+#endif
     PIN_TERMINATE /* Terminate list */
 };
 
