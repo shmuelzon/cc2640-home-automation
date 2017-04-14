@@ -66,9 +66,15 @@
 #endif
 
 const PIN_Config BoardGpioInitTable[] = {
+#if Board_RELAY_SET != PIN_UNASSIGNED
     Board_RELAY_SET | PIN_GPIO_OUTPUT_EN | PIN_GPIO_LOW | PIN_PUSHPULL,
+#endif
+#if Board_RELAY_RESET != PIN_UNASSIGNED
     Board_RELAY_RESET | PIN_GPIO_OUTPUT_EN | PIN_GPIO_LOW | PIN_PUSHPULL,
+#endif
+#if Board_SWITCH != PIN_UNASSIGNED
     Board_SWITCH | PIN_INPUT_EN | PIN_HYSTERESIS,
+#endif
     PIN_TERMINATE /* Terminate list */
 };
 

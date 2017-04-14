@@ -317,8 +317,12 @@ static oadTargetCBs_t HomeAutomation_oadCBs =
 };
 #endif //FEATURE_OAD
 
+#if Board_RELAY_SET != PIN_UNASSIGNED
 static void HomeAutomation_RelayStateChangeCB(void);
+#endif
+#if Board_SWITCH != PIN_UNASSIGNED
 static void HomeAutomation_ToggleOwnRelayChangeCB(void);
+#endif
 
 /*********************************************************************
  * PUBLIC FUNCTIONS
@@ -401,7 +405,6 @@ static void HomeAutomation_init(void)
   // Setup GPIO
   PIN_open(&haPinState, BoardGpioInitTable);
   PIN_registerIntCb(&haPinState, HomeAutomation_intCb);
-  PIN_setInterrupt(&haPinState, Board_SWITCH | PIN_IRQ_BOTHEDGES);
 
   dispHandle = Display_open(Display_Type_LCD, NULL);
 
@@ -488,6 +491,7 @@ static void HomeAutomation_init(void)
 #endif //IMAGE_INVALIDATE
 
   // Relay service
+#if Board_RELAY_SET != PIN_UNASSIGNED
   {
     uint8_t relayState;
 
@@ -498,13 +502,17 @@ static void HomeAutomation_init(void)
        relayState = 0xFF;
     Relay_SetParameter(RELAY_PARAM_STATE, sizeof(relayState), &relayState);
   }
+#endif
 
   // Switch service
+#if Board_SWITCH != PIN_UNASSIGNED
   {
     uint8_t switchState, toggleOwnRelay;
 
     Switch_AddService();
     Switch_Setup(HomeAutomation_ToggleOwnRelayChangeCB);
+    // Set up interrupts on switch
+    PIN_setInterrupt(&haPinState, Board_SWITCH | PIN_IRQ_BOTHEDGES);
     // Set current state of switch
     switchState = PIN_getInputValue(Board_SWITCH);
     Switch_SetParameter(SWITCH_PARAM_STATE, 1, &switchState);
@@ -513,6 +521,7 @@ static void HomeAutomation_init(void)
       toggleOwnRelay = 1;
     Switch_SetParameter(SWITCH_PARAM_TOGGLE_OWN_RELAY, sizeof(toggleOwnRelay), &toggleOwnRelay);
   }
+#endif
 
   // Start the Device
   VOID GAPRole_StartDevice(&HomeAutomation_gapRoleCBs);
@@ -654,22 +663,26 @@ static void HomeAutomation_taskFxn(UArg a0, UArg a1)
 
     if (events & HA_GPIO_DEBOUNCE_EVT)
     {
-      uint8_t prev, cur;
-
       events &= ~HA_GPIO_DEBOUNCE_EVT;
+
+#if Board_SWITCH != PIN_UNASSIGNED
+      uint8_t prev, cur;
 
       Switch_GetParameter(SWITCH_PARAM_STATE, &prev);
       cur = PIN_getInputValue(Board_SWITCH);
 
       if (prev != cur)
       {
-        uint8_t doToggle;
+        uint8_t doToggle = 0;
 
         // Save new switch state
         Switch_SetParameter(SWITCH_PARAM_STATE, 1, &cur);
 
+#if Board_RELAY_SET != PIN_UNASSIGNED
         // Check if we need to toggle the relay
         Switch_GetParameter(SWITCH_PARAM_TOGGLE_OWN_RELAY, &doToggle);
+#endif
+
         if (doToggle)
         {
           uint8_t relayState;
@@ -680,6 +693,7 @@ static void HomeAutomation_taskFxn(UArg a0, UArg a1)
           HomeAutomation_RelayStateSet(relayState);
         }
       }
+#endif
     }
 
     if (events & HA_TOGGLE_OWN_RELAY_CHANGED_EVT)
@@ -1159,6 +1173,7 @@ static void HomeAutomation_clockCb(UArg arg)
   Semaphore_post(sem);
 }
 
+#if Board_RELAY_SET != PIN_UNASSIGNED
 /*********************************************************************
  * @fn      HomeAutomation_RelayStateChangeCB
  *
@@ -1174,6 +1189,7 @@ static void HomeAutomation_RelayStateChangeCB(void)
   // Wake up the application.
   Semaphore_post(sem);
 }
+#endif
 
 /*********************************************************************
  * @fn      HomeAutomation_RelayStateSet
@@ -1234,6 +1250,7 @@ static void HomeAutomation_intCb(PIN_Handle handle, PIN_Id pinId)
     Util_startClock(&periodDebounce);
 }
 
+#if Board_SWITCH != PIN_UNASSIGNED
 /*********************************************************************
  * @fn      HomeAutomation_ToggleOwnRelayChangeCB
  *
@@ -1250,6 +1267,7 @@ static void HomeAutomation_ToggleOwnRelayChangeCB(void)
   // Wake up the application.
   Semaphore_post(sem);
 }
+#endif
 
 /*********************************************************************
 *********************************************************************/
