@@ -122,8 +122,8 @@ extern const PIN_Config BoardGpioInitTable[];
 #define Board_PWMPIN6                       PIN_UNASSIGNED
 #define Board_PWMPIN7                       PIN_UNASSIGNED
 /* Outputs */
-#define Board_RELAY_SET                     IOID_6
-#define Board_RELAY_RESET                   IOID_7
+#define Board_RELAY_SET                     IOID_7
+#define Board_RELAY_RESET                   IOID_8
 /* Sensors */
 #define Board_SWITCH                        IOID_5
 
