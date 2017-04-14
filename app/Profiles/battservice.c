@@ -404,8 +404,8 @@ bStatus_t Batt_MeasLevel(void)
 
   level = battMeasure();
 
-  // If level has gone down
-  if (level < battLevel)
+  // If level has changed
+  if (level != battLevel)
   {
     // Update level
     battLevel = (uint8)(level & 0x00FF);
@@ -477,8 +477,8 @@ static bStatus_t battReadAttrCB(uint16_t connHandle, gattAttribute_t *pAttr,
 
     level = battMeasure();
 
-    // If level has gone down
-    if (level < battLevel)
+    // If level has changed
+    if (level != battLevel)
     {
       // Update level
       battLevel = level;
