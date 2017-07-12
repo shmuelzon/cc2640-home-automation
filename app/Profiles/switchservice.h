@@ -18,14 +18,10 @@ extern "C"
 
 // Switch Service Get/Set Parameters
 #define SWITCH_PARAM_STATE              0
-#define SWITCH_PARAM_TOGGLE_OWN_RELAY   1
 
 /*********************************************************************
  * TYPEDEFS
  */
-
-// Toggle own relay configuration change function
-typedef void (*switchServiceToggleOwnRelayChangeCB_t)(void);
 
 /*********************************************************************
  * MACROS
@@ -80,17 +76,6 @@ extern bStatus_t Switch_SetParameter(uint8_t param, uint8_t len, void *value);
  * @return  bStatus_t
  */
 extern bStatus_t Switch_GetParameter(uint8_t param, void *value);
-
-/*********************************************************************
- * @fn      Switch_Setup
- *
- * @brief   Set up callback functions.
- *
- * @param   cCB - function to be called when ToggleOwnRelay has changed
- *
- * @return  none.
- */
-extern void Switch_Setup(switchServiceToggleOwnRelayChangeCB_t cCB);
 
 /*********************************************************************
 *********************************************************************/

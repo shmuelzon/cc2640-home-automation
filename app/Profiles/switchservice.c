@@ -31,9 +31,6 @@
 
 #define SWITCH_STATE_VALUE_LEN 1
 
-// Toggle own relay UUID
-#define SWITCH_TOGGLE_OWN_RELAY_UUID 0x2F12
-
 /*********************************************************************
  * TYPEDEFS
  */
@@ -53,11 +50,6 @@ CONST uint8_t switchStateUUID[ATT_BT_UUID_SIZE] =
   LO_UINT16(SWITCH_STATE_UUID), HI_UINT16(SWITCH_STATE_UUID)
 };
 
-CONST uint8_t toggleOwnRelayUUID[ATT_BT_UUID_SIZE] =
-{
-  LO_UINT16(SWITCH_TOGGLE_OWN_RELAY_UUID), HI_UINT16(SWITCH_TOGGLE_OWN_RELAY_UUID)
-};
-
 /*********************************************************************
  * EXTERNAL VARIABLES
  */
@@ -69,9 +61,6 @@ CONST uint8_t toggleOwnRelayUUID[ATT_BT_UUID_SIZE] =
 /*********************************************************************
  * LOCAL VARIABLES
  */
-
-// Toggle own relay configuration change callback.
-static switchServiceToggleOwnRelayChangeCB_t switchServiceToggleOwnRelayChangeCB = NULL;
 
 /*********************************************************************
  * Profile Attributes - variables
@@ -90,15 +79,6 @@ static uint8_t switchState = 0xff;
 uint8_t switchStateUserDesc[] = "Switch State";
 
 static gattCharCfg_t *switchStateClientCharCfg;
-
-// Toggle own relay characteristic.
-static uint8_t toggleOwnRelayProps = GATT_PROP_READ | GATT_PROP_WRITE;
-
-// Toggle own relay value
-static uint8_t toggleOwnRelay = 1;
-
-// Toggle own relay user description
-uint8_t toggleOwnRelayUserDesc[] = "Toggle own relay";
 
 /*********************************************************************
  * Profile Attributes - Table
@@ -144,30 +124,6 @@ static gattAttribute_t switchAttrTbl[] =
         GATT_PERMIT_READ,
         0,
         switchStateUserDesc
-      },
-
-    // Toggle Own Relay Declaration
-    {
-      { ATT_BT_UUID_SIZE, characterUUID },
-      GATT_PERMIT_READ,
-      0,
-      &toggleOwnRelayProps
-    },
-
-      // Toggle Own Relay Value
-      {
-        { ATT_BT_UUID_SIZE, toggleOwnRelayUUID },
-        GATT_PERMIT_AUTHEN_READ | GATT_PERMIT_AUTHEN_WRITE,
-        0,
-        &toggleOwnRelay
-      },
-
-      // Toggle Own Relay User Description
-      {
-        { ATT_BT_UUID_SIZE, charUserDescUUID },
-        GATT_PERMIT_READ,
-        0,
-        toggleOwnRelayUserDesc
       },
 };
 
@@ -259,13 +215,6 @@ bStatus_t Switch_SetParameter(uint8_t param, uint8_t len, void *value)
         ret = bleInvalidRange;
       break;
 
-    case SWITCH_PARAM_TOGGLE_OWN_RELAY:
-      if (len == sizeof(uint8_t))
-        toggleOwnRelay = *((uint8_t*)value);
-      else
-        ret = bleInvalidRange;
-      break;
-
     default:
       ret = INVALIDPARAMETER;
       break;
@@ -297,30 +246,12 @@ bStatus_t Switch_GetParameter(uint8_t param, void *value)
       *((uint8_t*)value) = switchState;
       break;
 
-    case SWITCH_PARAM_TOGGLE_OWN_RELAY:
-      *((uint8_t*)value) = toggleOwnRelay;
-      break;
-
     default:
       ret = INVALIDPARAMETER;
       break;
   }
 
   return (ret);
-}
-
-/*********************************************************************
- * @fn      Switch_Setup
- *
- * @brief   Set up callback functions.
- *
- * @param   cCB - function to be called when ToggleOwnRelay has changed
- *
- * @return  none.
- */
-void Switch_Setup(switchServiceToggleOwnRelayChangeCB_t cCB)
-{
-  switchServiceToggleOwnRelayChangeCB = cCB;
 }
 
 /*********************************************************************
@@ -355,11 +286,6 @@ static bStatus_t SwitchReadAttrCB(uint16_t connHandle, gattAttribute_t *pAttr,
     *pLen = 1;
     pValue[0] = switchState;
   }
-  else if (uuid == SWITCH_TOGGLE_OWN_RELAY_UUID)
-  {
-    *pLen = 1;
-    pValue[0] = toggleOwnRelay;
-  }
   else
     status = ATT_ERR_ATTR_NOT_FOUND;
 
@@ -388,25 +314,6 @@ static bStatus_t SwitchWriteAttrCB(uint16_t connHandle, gattAttribute_t *pAttr,
   uint16_t uuid = BUILD_UINT16(pAttr->type.uuid[0], pAttr->type.uuid[1]);
   switch (uuid)
   {
-    case SWITCH_TOGGLE_OWN_RELAY_UUID:
-      //Validate the value
-      if (len != 1)
-        status = ATT_ERR_INVALID_VALUE_SIZE;
-
-      if (status == SUCCESS)
-      {
-        uint8 *pCurValue = (uint8 *)pAttr->pValue;
-
-        /* Change the configuration only if the logical value changed */
-        if (*pCurValue != !!(pValue[0]))
-        {
-          if (switchServiceToggleOwnRelayChangeCB)
-            switchServiceToggleOwnRelayChangeCB();
-          *pCurValue = !!pValue[0]; // Save the value
-        }
-      }
-      break;
-
     case GATT_CLIENT_CHAR_CFG_UUID:
       status = GATTServApp_ProcessCCCWriteReq(connHandle, pAttr, pValue, len,
         offset, GATT_CLIENT_CFG_NOTIFY);

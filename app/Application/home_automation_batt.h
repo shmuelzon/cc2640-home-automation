@@ -1,6 +1,16 @@
 /******************************************************************************
 
- Copyright (c) 2013-2016, Texas Instruments Incorporated
+ @file  home_automation_batt.h
+
+ @brief This file contains the Sensor Tag sample application, battery
+        monitoring sub-task.
+
+ Group: WCS, BTS
+ Target Device: CC2650, CC2640, CC1350
+
+ ******************************************************************************
+
+ Copyright (c) 2016, Texas Instruments Incorporated
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -30,10 +40,13 @@
  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+ ******************************************************************************
+ Release Name: ble_sdk_2_02_01_18
+ Release Date: 2016-10-26 15:20:04
  *****************************************************************************/
 
-#ifndef HOMEAUTOMATION_H
-#define HOMEAUTOMATION_H
+#ifndef HOMEAUTOMATIONBATT_H
+#define HOMEAUTOMATIONBATT_H
 
 #ifdef __cplusplus
 extern "C"
@@ -43,25 +56,11 @@ extern "C"
 /*********************************************************************
  * INCLUDES
  */
-#include "ICall.h"
-#include <ti/drivers/PIN.h>
-
-/*********************************************************************
-*  EXTERNAL VARIABLES
-*/
-// GPIOs
-extern ICall_Semaphore sem;
-extern PIN_State haPinState;
-extern PIN_Handle haPinHandle;
+#include "home_automation.h"
 
 /*********************************************************************
  * CONSTANTS
  */
-
-// Service ID's for internal application use
-#define SERVICE_ID_BATT      1
-#define SERVICE_ID_KEYS      2
-#define SERVICE_ID_RELAY     3
 
 /*********************************************************************
  * MACROS
@@ -70,16 +69,38 @@ extern PIN_Handle haPinHandle;
 /*********************************************************************
  * FUNCTIONS
  */
+#ifndef EXCLUDE_BATT
 
 /*
- * Task creation function for the Home Automation task.
+ * Initialization Battery module
  */
-extern void HomeAutomation_createTask(void);
+extern void HomeAutomationBatt_init(void);
 
 /*
- * Function to call when a characteristic value has changed
+ * Task Event Processor for characteristic changes
  */
-extern void HomeAutomation_charValueChangeCB(uint8_t sensorID, uint8_t paramID);
+extern void HomeAutomationBatt_processCharChangeEvt(uint8_t paramID);
+
+/*
+ * Task Event Processor for Sensor reading
+ */
+extern void HomeAutomationBatt_processSensorEvent(void);
+
+/*
+ * Reset Battery module
+ */
+extern void HomeAutomationBatt_reset(void);
+
+#else
+
+/* Battery module not included */
+
+#define HomeAutomationBatt_init()
+#define HomeAutomatioBatt_processCharChangeEvt(paramID)
+#define HomeAutomatioBatt_processSensorEvent()
+#define HomeAutomationBatt_reset()
+
+#endif // EXCLUDE_BATT
 
 /*********************************************************************
 *********************************************************************/
@@ -88,4 +109,4 @@ extern void HomeAutomation_charValueChangeCB(uint8_t sensorID, uint8_t paramID);
 }
 #endif
 
-#endif /* HOMEAUTOMATION_H */
+#endif /* HOMEAUTOMATIONBATT_H */
