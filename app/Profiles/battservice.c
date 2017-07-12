@@ -590,7 +590,7 @@ static void battNotify(uint16_t connHandle)
  */
 static uint8_t battMeasure(void)
 {
-  uint32_t percent;
+  int32_t percent;
 
   // Call measurement setup callback
   if (battServiceSetupCB != NULL)
