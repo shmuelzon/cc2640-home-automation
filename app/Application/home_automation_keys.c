@@ -204,6 +204,7 @@ void HomeAutomationKeys_processEvent(void)
         Util_stopClock(&periodLatch);
       Util_startClock(&periodLatch);
       MotionSensor_SetParameter(MOTION_SENSOR_PARAM_STATE, 1, &cur);
+      PIN_setOutputValue(haPinHandle, Board_LED1, Board_LED_ON);
     }
 #endif
   }
@@ -215,6 +216,7 @@ void HomeAutomationKeys_processEvent(void)
 #ifdef HAS_MOTION
 	uint8_t state = 0;
 	MotionSensor_SetParameter(MOTION_SENSOR_PARAM_STATE, 1, &state);
+	PIN_setOutputValue(haPinHandle, Board_LED1, Board_LED_OFF);
 #endif
   }
 }

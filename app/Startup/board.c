@@ -66,6 +66,9 @@
 #endif
 
 const PIN_Config BoardGpioInitTable[] = {
+#if Board_LED1 != PIN_UNASSIGNED
+    Board_LED1 | PIN_GPIO_OUTPUT_EN | PIN_GPIO_LOW | PIN_PUSHPULL | PIN_DRVSTR_MAX,
+#endif
 #if Board_RELAY_SET != PIN_UNASSIGNED
     Board_RELAY_SET | PIN_GPIO_OUTPUT_EN | PIN_GPIO_LOW | PIN_PUSHPULL,
 #endif
