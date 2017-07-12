@@ -27,7 +27,11 @@ extern "C"
 #define HAS_CONTACT
 #endif
 
-#if defined(HAS_SWITCH) || defined(HAS_CONTACT)
+#if Board_MOTION != PIN_UNASSIGNED
+#define HAS_MOTION
+#endif
+
+#if defined(HAS_SWITCH) || defined(HAS_CONTACT) || defined(HAS_MOTION)
 #define HAS_KEYS
 #endif
 
@@ -65,6 +69,13 @@ extern void HomeAutomationKeys_processKeySwitch(void);
 extern void HomeAutomationKeys_processKeyContact(void);
 #endif
 
+/*
+ * Process motion sensor
+ */
+#ifdef HAS_MOTION
+extern void HomeAutomationKeys_processKeyMotion(void);
+#endif
+
 #else
 
 /* Keys module not included */
@@ -73,6 +84,7 @@ extern void HomeAutomationKeys_processKeyContact(void);
 #define HomeAutomationKeys_reset()
 #define HomeAutomationKeys_processKeySwitch()
 #define HomeAutomationKeys_processKeyContact()
+#define HomeAutomationKeys_processKeyMotion()
 
 #endif // HAS_KEYS
 

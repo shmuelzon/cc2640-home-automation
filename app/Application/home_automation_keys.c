@@ -10,6 +10,7 @@
 #include "util.h"
 #include "switchservice.h"
 #include "contactsensorservice.h"
+#include "motionsensorservice.h"
 
 #include <ti/sysbios/knl/Clock.h>
 #include <ti/sysbios/knl/Semaphore.h>
@@ -24,9 +25,12 @@
  */
 // Debounce timeout before reading GPIO state (in milliseconds)
 #define KEYS_DEBOUNCE_TIME       25
+// Time to latch the input (in milliseconds)
+#define KEYS_LATCH_TIME          2000
 
 // Events
 #define KEYS_DEBOUNCE_EVT        (1 << 0)
+#define KEYS_LATCH_EVT           (1 << 1)
 
 /*********************************************************************
  * TYPEDEFS
@@ -48,6 +52,7 @@
  * LOCAL VARIABLES
  */
 static Clock_Struct periodDebounce;
+static Clock_Struct periodLatch;
 static uint8_t events;
 
 /*********************************************************************
@@ -84,12 +89,20 @@ void HomeAutomationKeys_init(void)
   ContactSensor_AddService();
 #endif
 
+#ifdef HAS_MOTION
+  // Add contact sensor service
+  MotionSensor_AddService();
+#endif
+
   // Initialize the module state variables
   HomeAutomationKeys_reset();
 
   // Create one-shot clock for key press debouncing
   Util_constructClock(&periodDebounce, HomeAutomationKeys_clockHandler,
     KEYS_DEBOUNCE_TIME, 0, false, KEYS_DEBOUNCE_EVT);
+  // Create one-shot clock for key press latching
+  Util_constructClock(&periodLatch, HomeAutomationKeys_clockHandler,
+    KEYS_LATCH_TIME, 0, false, KEYS_LATCH_EVT);
 }
 
 /*********************************************************************
@@ -127,6 +140,23 @@ void HomeAutomationKeys_processKeyContact(void)
 #endif
 
 /*********************************************************************
+ * @fn      HomeAutomationKeys_processKeyMotion
+ *
+ * @brief   Interrupt handler for motion sensor
+ *
+ * @param   none
+ *
+ * @return  none
+ */
+#ifdef HAS_MOTION
+void HomeAutomationKeys_processKeyMotion(void)
+{
+  if (!Util_isActive(&periodDebounce))
+    Util_startClock(&periodDebounce);
+}
+#endif
+
+/*********************************************************************
  * @fn      HomeAutomationKeys_processEvent
  *
  * @brief   HomeAutomation Keys event processor.
@@ -139,7 +169,7 @@ void HomeAutomationKeys_processEvent(void)
 {
   if (events & KEYS_DEBOUNCE_EVT)
   {
-    uint8_t prev, cur;
+    uint8_t __attribute__((unused)) prev, cur;
 
     events &= ~KEYS_DEBOUNCE_EVT;
 
@@ -162,6 +192,29 @@ void HomeAutomationKeys_processEvent(void)
     // Save new contact sensor state
     if (prev != cur)
       ContactSensor_SetParameter(CONTACT_SENSOR_PARAM_STATE, 1, &cur);
+#endif
+
+#ifdef HAS_MOTION
+    cur = PIN_getInputValue(Board_MOTION);
+
+    // Latch input
+    if (cur)
+    {
+      if (Util_isActive(&periodLatch))
+        Util_stopClock(&periodLatch);
+      Util_startClock(&periodLatch);
+      MotionSensor_SetParameter(MOTION_SENSOR_PARAM_STATE, 1, &cur);
+    }
+#endif
+  }
+
+  if (events & KEYS_LATCH_EVT)
+  {
+	  events &= ~KEYS_LATCH_EVT;
+
+#ifdef HAS_MOTION
+	uint8_t state = 0;
+	MotionSensor_SetParameter(MOTION_SENSOR_PARAM_STATE, 1, &state);
 #endif
   }
 }
@@ -193,6 +246,15 @@ void HomeAutomationKeys_reset(void)
     // Set current state of contact sensor
     contactSensorState = PIN_getInputValue(Board_CONTACT);
     ContactSensor_SetParameter(CONTACT_SENSOR_PARAM_STATE, 1, &contactSensorState);
+  }
+#endif
+#ifdef HAS_MOTION
+  {
+    uint8_t motionSensorState;
+
+    // Set current state of motion sensor
+    motionSensorState = PIN_getInputValue(Board_MOTION);
+    MotionSensor_SetParameter(MOTION_SENSOR_PARAM_STATE, 1, &motionSensorState);
   }
 #endif
   events = 0;

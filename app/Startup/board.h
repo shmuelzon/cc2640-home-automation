@@ -127,6 +127,7 @@ extern const PIN_Config BoardGpioInitTable[];
 /* Sensors */
 #define Board_SWITCH                        IOID_5
 #define Board_CONTACT                       PIN_UNASSIGNED
+#define Board_MOTION                        PIN_UNASSIGNED
 
 /** ============================================================================
  *  Instance identifiers

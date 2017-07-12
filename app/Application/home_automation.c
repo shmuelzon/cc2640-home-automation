@@ -146,6 +146,9 @@
 #elif defined(HAS_CONTACT)
 #define NAME 'C', 'o', 'n', 't', 'a', 'c', 't'
 #define NAME_LEN 7
+#elif defined(HAS_MOTION)
+#define NAME 'M', 'o', 't', 'i', 'o', 'n'
+#define NAME_LEN 6
 #else
 #error No Name defined for device
 #endif
@@ -1134,6 +1137,11 @@ static void HomeAutomation_intCb(PIN_Handle handle, PIN_Id pinId)
 #ifdef HAS_CONTACT
   case Board_CONTACT:
       HomeAutomationKeys_processKeyContact();
+      break;
+#endif
+#ifdef HAS_MOTION
+  case Board_MOTION:
+      HomeAutomationKeys_processKeyMotion();
       break;
 #endif
   default:

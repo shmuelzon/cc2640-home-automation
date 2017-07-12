@@ -78,6 +78,9 @@ const PIN_Config BoardGpioInitTable[] = {
 #if Board_CONTACT != PIN_UNASSIGNED
     Board_CONTACT | PIN_INPUT_EN | PIN_IRQ_BOTHEDGES | PIN_HYSTERESIS,
 #endif
+#if Board_MOTION != PIN_UNASSIGNED
+    Board_MOTION | PIN_INPUT_EN | PIN_IRQ_BOTHEDGES | PIN_HYSTERESIS,
+#endif
     PIN_TERMINATE /* Terminate list */
 };
 
