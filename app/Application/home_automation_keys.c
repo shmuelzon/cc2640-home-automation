@@ -211,12 +211,12 @@ void HomeAutomationKeys_processEvent(void)
 
   if (events & KEYS_LATCH_EVT)
   {
-	  events &= ~KEYS_LATCH_EVT;
+    events &= ~KEYS_LATCH_EVT;
 
 #ifdef HAS_MOTION
-	uint8_t state = 0;
-	MotionSensor_SetParameter(MOTION_SENSOR_PARAM_STATE, 1, &state);
-	PIN_setOutputValue(haPinHandle, Board_LED1, Board_LED_OFF);
+    uint8_t state = 0;
+    MotionSensor_SetParameter(MOTION_SENSOR_PARAM_STATE, 1, &state);
+    PIN_setOutputValue(haPinHandle, Board_LED1, Board_LED_OFF);
 #endif
   }
 }

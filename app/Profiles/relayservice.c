@@ -121,13 +121,13 @@ static gattAttribute_t relayAttrTbl[] =
         (uint8_t *)&relayStateClientCharCfg
       },
 
-	  // Relay State User Description
-	  {
+      // Relay State User Description
+      {
         { ATT_BT_UUID_SIZE, charUserDescUUID },
         GATT_PERMIT_READ,
         0,
         relayStateUserDesc
-	  },
+      },
 };
 
 
@@ -345,7 +345,7 @@ static bStatus_t RelayWriteAttrCB(uint16_t connHandle, gattAttribute_t *pAttr,
           if (*pCurValue != !!(pValue[0]))
           {
             if (relayServiceStateChangeCB)
-            	relayServiceStateChangeCB();
+              relayServiceStateChangeCB();
             *pCurValue = !!pValue[0]; // Save the value
           }
         }
