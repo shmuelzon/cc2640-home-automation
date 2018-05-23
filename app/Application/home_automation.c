@@ -132,7 +132,7 @@
 #define HA_TASK_PRIORITY                      1
 
 #ifndef HA_TASK_STACK_SIZE
-#define HA_TASK_STACK_SIZE                    644
+#define HA_TASK_STACK_SIZE                    700
 #endif
 
 // Internal Events for RTOS application
