@@ -404,8 +404,13 @@ bStatus_t Batt_MeasLevel(void)
 
   level = battMeasure();
 
+#ifdef ENERGY_HARVESTING
   // If level has changed
   if (level != battLevel)
+#else
+  // If level has gone down
+  if (level < battLevel)
+#endif
   {
     // Update level
     battLevel = (uint8)(level & 0x00FF);
@@ -473,16 +478,7 @@ static bStatus_t battReadAttrCB(uint16_t connHandle, gattAttribute_t *pAttr,
   // Measure battery level if reading level
   if (uuid == BATT_LEVEL_UUID)
   {
-    uint8_t level;
-
-    level = battMeasure();
-
-    // If level has changed
-    if (level != battLevel)
-    {
-      // Update level
-      battLevel = level;
-    }
+    Batt_MeasLevel();
 
     *pLen = 1;
     pValue[0] = battLevel;
