@@ -49,6 +49,7 @@
 									<listOptionValue builtIn="false" value="${PROJECT_LOC}/Startup"/>
 									<listOptionValue builtIn="false" value="${PROJECT_LOC}/Application"/>
 									<listOptionValue builtIn="false" value="${PROJECT_LOC}/Profiles"/>
+									<listOptionValue builtIn="false" value="${PROJECT_LOC}/Middleware/sensors"/>
 									<listOptionValue builtIn="false" value="${CG_TOOL_ROOT}/include"/>
 									<listOptionValue builtIn="false" value="${SRC_EX}/inc"/>
 									<listOptionValue builtIn="false" value="${SRC_EX}/icall/inc"/>
@@ -56,6 +57,7 @@
 									<listOptionValue builtIn="false" value="${SRC_EX}/profiles/roles"/>
 									<listOptionValue builtIn="false" value="${SRC_EX}/profiles/dev_info"/>
 									<listOptionValue builtIn="false" value="${SRC_EX}/profiles/hid_dev/cc26xx"/>
+									<listOptionValue builtIn="false" value="${SRC_EX}/profiles/sensor_profile/cc26xx"/>
 									<listOptionValue builtIn="false" value="${SRC_EX}/common/cc26xx"/>
 									<listOptionValue builtIn="false" value="${SRC_COMMON}/heapmgr"/>
 									<listOptionValue builtIn="false" value="${SRC_BLE_CORE}/controller/cc26xx/inc"/>
@@ -69,6 +71,7 @@
 									<listOptionValue builtIn="false" value="${SRC_BLE_CORE}/inc"/>
 									<listOptionValue builtIn="false" value="${SRC_BLE_CORE}/rom"/>
 									<listOptionValue builtIn="false" value="${CC26XXWARE}"/>
+									<listOptionValue builtIn="false" value="${TI_RTOS_DRIVERS_BASE}/ti/mw/sensors"/>
 								</option>
 								<option id="com.ti.ccstudio.buildDefinitions.TMS470_5.2.compilerID.DEBUGGING_MODEL.370168659" name="Debugging model" superClass="com.ti.ccstudio.buildDefinitions.TMS470_5.2.compilerID.DEBUGGING_MODEL" value="com.ti.ccstudio.buildDefinitions.TMS470_5.2.compilerID.DEBUGGING_MODEL.SYMDEBUG__DWARF" valueType="enumerated"/>
 								<option id="com.ti.ccstudio.buildDefinitions.TMS470_5.2.compilerID.C_DIALECT.1220940003" name="C Dialect" superClass="com.ti.ccstudio.buildDefinitions.TMS470_5.2.compilerID.C_DIALECT" value="com.ti.ccstudio.buildDefinitions.TMS470_5.2.compilerID.C_DIALECT.C99" valueType="enumerated"/>
@@ -154,7 +157,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="Profiles/oad_target_external_flash.c|Profiles/oad.c|Middleware|Application/rcosc_calibration.c|Startup/ccfg_app_ble_rcosc.c|cc26x0f128.cmd|Startup/ST|Board|Tools/cc26xx_app_oad.cmd" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="Middleware/extflash|Application/rcosc_calibration.c|Startup/ccfg_app_ble_rcosc.c|Profiles/oad_target_external_flash.c|cc26x0f128.cmd|Profiles/oad.c|Startup/ST|Board|Tools/cc26xx_app_oad.cmd" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -309,7 +312,8 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="Profiles/oad_target_external_flash.c|Profiles/oad.c|Middleware|cc26x0f128.cmd|Startup/ST|Startup/ccfg_app_ble.c|Board|Tools/cc26xx_app_oad.cmd" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="Middleware/extflash|Middleware/sensors/SensorUtil.h|Middleware/sensors/SensorUtil.c|Middleware/sensors/SensorI2C.h|Middleware/sensors/SensorI2C.c|Profiles/oad_target_external_flash.c|cc26x0f128.cmd|Profiles/oad.c|Startup/ST|Startup/ccfg_app_ble.c|Board|Tools/cc26xx_app_oad.cmd" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Middleware/extflash"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>

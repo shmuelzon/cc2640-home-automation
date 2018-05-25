@@ -47,11 +47,6 @@
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
-			<name>Middleware</name>
-			<type>2</type>
-			<locationURI>virtual:/virtual</locationURI>
-		</link>
-		<link>
 			<name>Tools</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
@@ -435,6 +430,26 @@
 			<name>Middleware/extflash/ExtFlash.h</name>
 			<type>1</type>
 			<locationURI>TI_RTOS_DRIVERS_BASE/ti/mw/extflash/ExtFlash.h</locationURI>
+		</link>
+		<link>
+			<name>Middleware/sensors/SensorI2C.c</name>
+			<type>1</type>
+			<locationURI>TI_RTOS_DRIVERS_BASE/ti/mw/sensors/SensorI2C.c</locationURI>
+		</link>
+		<link>
+			<name>Middleware/sensors/SensorI2C.h</name>
+			<type>1</type>
+			<locationURI>TI_RTOS_DRIVERS_BASE/ti/mw/sensors/SensorI2C.h</locationURI>
+		</link>
+		<link>
+			<name>Middleware/sensors/SensorUtil.c</name>
+			<type>1</type>
+			<locationURI>TI_RTOS_DRIVERS_BASE/ti/mw/sensors/SensorUtil.c</locationURI>
+		</link>
+		<link>
+			<name>Middleware/sensors/SensorUtil.h</name>
+			<type>1</type>
+			<locationURI>TI_RTOS_DRIVERS_BASE/ti/mw/sensors/SensorUtil.h</locationURI>
 		</link>
 	</linkedResources>
 	<variableList>

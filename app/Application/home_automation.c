@@ -42,6 +42,7 @@
 #include <ti/sysbios/knl/Semaphore.h>
 #include <ti/sysbios/knl/Queue.h>
 
+#include "SensorI2C.h"
 #include "hci_tl.h"
 #include "gatt.h"
 #include "linkdb.h"
@@ -75,6 +76,7 @@
 #include "home_automation_batt.h"
 #include "home_automation_keys.h"
 #include "home_automation_relay.h"
+#include "home_automation_env.h"
 
 #if defined( USE_FPGA ) || defined( DEBUG_SW_TRACE )
 #include <driverlib/ioc.h>
@@ -380,6 +382,8 @@ static void HomeAutomation_init(void)
   // Create an RTOS queue for message from profile to be sent to app.
   appMsgQueue = Util_constructQueue(&appMsg);
 
+  // Setup I2C for sensors
+  SensorI2C_open();
 
   // Setup GPIO
   haPinHandle = PIN_open(&haPinState, BoardGpioInitTable);
@@ -469,6 +473,9 @@ static void HomeAutomation_init(void)
 
   // Add battery monitor
   HomeAutomationBatt_init();
+
+  // Sensor modules
+  HomeAutomationEnv_init(); // Environmental sensor (light)
 
   // Auxiliary modules
   HomeAutomationKeys_init(); // Input keys (buttons, switches, etc.)
@@ -577,6 +584,7 @@ static void HomeAutomation_taskFxn(UArg a0, UArg a1)
       HomeAutomationKeys_processEvent();
       HomeAutomationRelay_processEvent();
       HomeAutomationBatt_processSensorEvent();
+      HomeAutomationEnv_processEvent();
     }
 
 #ifdef FEATURE_OAD
@@ -1113,6 +1121,7 @@ static void HomeAutomation_resetAllModules(void)
   HomeAutomationBatt_reset();
   HomeAutomationKeys_reset();
   HomeAutomationRelay_reset();
+  HomeAutomationEnv_reset();
 }
 
 /*********************************************************************

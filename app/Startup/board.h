@@ -107,6 +107,11 @@ extern const PIN_Config BoardGpioInitTable[];
 #define Board_UART_TX                       PIN_UNASSIGNED
 #define Board_UART_CTS                      PIN_UNASSIGNED
 #define Board_UART_RTS                      PIN_UNASSIGNED
+/* I2C */
+#define Board_I2C0_SDA0                     PIN_UNASSIGNED
+#define Board_I2C0_SCL0                     PIN_UNASSIGNED
+#define Board_I2C0_SDA1                     PIN_UNASSIGNED
+#define Board_I2C0_SCL1                     PIN_UNASSIGNED
 /* SPI Board */
 #define Board_SPI0_MISO                     PIN_UNASSIGNED
 #define Board_SPI0_MOSI                     PIN_UNASSIGNED
@@ -129,9 +134,14 @@ extern const PIN_Config BoardGpioInitTable[];
 #define Board_CONTACT                       PIN_UNASSIGNED
 #define Board_MOTION                        PIN_UNASSIGNED
 
+/* Board specific I2C addresses */
+#define Board_OPT3001_ADDR                  0
+
 /** ============================================================================
  *  Instance identifiers
  *  ==========================================================================*/
+/* Generic I2C instance identifiers */
+#define Board_I2C                   CC26XX_I2C0
 /* Generic SPI instance identifiers */
 #define Board_SPI0                  CC26XX_SPI0
 /* Generic UART instance identifiers */
@@ -162,6 +172,15 @@ extern const PIN_Config BoardGpioInitTable[];
 /** ============================================================================
  *  Number of peripherals and their names
  *  ==========================================================================*/
+
+/*!
+ *  @def    CC2650STK_I2CName
+ *  @brief  Enum of I2C names on the board
+ */
+typedef enum CC26XX_I2CName {
+    CC26XX_I2C0 = 0,
+    CC26XX_I2CCOUNT
+} CC26XX_I2CName;
 
 /*!
  *  @def    CC26XX_CryptoName
