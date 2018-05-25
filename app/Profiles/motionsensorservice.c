@@ -106,7 +106,11 @@ static gattAttribute_t motionSensorAttrTbl[] =
       // Motion Sensor State Value
       {
         { ATT_BT_UUID_SIZE, motionSensorStateUUID },
+#ifndef DISABLE_AUTHENTICATION
         GATT_PERMIT_AUTHEN_READ,
+#else
+        GATT_PERMIT_READ,
+#endif
         0,
         &motionSensorState
       },

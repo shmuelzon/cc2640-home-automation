@@ -105,7 +105,11 @@ static gattAttribute_t switchAttrTbl[] =
       // Switch State Value
       {
         { ATT_BT_UUID_SIZE, switchStateUUID },
+#ifndef DISABLE_AUTHENTICATION
         GATT_PERMIT_AUTHEN_READ,
+#else
+        GATT_PERMIT_READ,
+#endif
         0,
         &switchState
       },
