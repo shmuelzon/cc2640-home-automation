@@ -23,7 +23,11 @@ extern "C"
 #define HAS_OPT3001
 #endif
 
-#if defined(HAS_OPT3001)
+#if Board_BME280_ADDR != 0
+#define HAS_BME280
+#endif
+
+#if defined(HAS_OPT3001) || defined(HAS_BME280)
 #define HAS_ENV
 #endif
 

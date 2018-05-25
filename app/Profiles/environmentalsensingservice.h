@@ -15,9 +15,15 @@ extern "C"
  * CONSTANTS */
 // Available services
 #define ESS_SERVICE_LUMINANCE          (1 << 0)
+#define ESS_SERVICE_PRESSURE           (1 << 1)
+#define ESS_SERVICE_TEMPERATURE        (1 << 2)
+#define ESS_SERVICE_HUMIDITY           (1 << 3)
 
 // Service Get/Set Parameters
 #define LUMINANCE_PARAM_VALUE          0
+#define PRESSURE_PARAM_VALUE           1
+#define TEMPERATURE_PARAM_VALUE        2
+#define HUMIDITY_PARAM_VALUE           3
 
 /*********************************************************************
  * TYPEDEFS

@@ -136,6 +136,7 @@ extern const PIN_Config BoardGpioInitTable[];
 
 /* Board specific I2C addresses */
 #define Board_OPT3001_ADDR                  0
+#define Board_BME280_ADDR                   0
 
 /** ============================================================================
  *  Instance identifiers

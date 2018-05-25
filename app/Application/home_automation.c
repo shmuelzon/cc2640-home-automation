@@ -475,7 +475,7 @@ static void HomeAutomation_init(void)
   HomeAutomationBatt_init();
 
   // Sensor modules
-  HomeAutomationEnv_init(); // Environmental sensor (light)
+  HomeAutomationEnv_init(); // Environmental sensor (light, pressure, humidity and temperature)
 
   // Auxiliary modules
   HomeAutomationKeys_init(); // Input keys (buttons, switches, etc.)
