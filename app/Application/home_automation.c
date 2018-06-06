@@ -1,6 +1,6 @@
 /******************************************************************************
 
- Copyright (c) 2013-2016, Texas Instruments Incorporated
+ Copyright (c) 2013-2018, Texas Instruments Incorporated
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -91,7 +91,7 @@
 
 // Limited discoverable mode advertises for 30.72s, and then stops
 // General discoverable mode advertises indefinitely
-#define DEFAULT_DISCOVERABLE_MODE             GAP_ADTYPE_FLAGS_LIMITED
+#define DEFAULT_DISCOVERABLE_MODE             GAP_ADTYPE_FLAGS_GENERAL
 
 #ifndef FEATURE_OAD
 // Minimum connection interval (units of 1.25ms, 80=100ms) if automatic
@@ -134,7 +134,7 @@
 #define HA_TASK_PRIORITY                      1
 
 #ifndef HA_TASK_STACK_SIZE
-#define HA_TASK_STACK_SIZE                    700
+#define HA_TASK_STACK_SIZE                    800
 #endif
 
 // Internal Events for RTOS application
@@ -287,6 +287,11 @@ void HomeAutomation_processOadWriteCB(uint8_t event, uint16_t connHandle,
 #endif //FEATURE_OAD
 
 /*********************************************************************
+ * EXTERN FUNCTIONS
+ */
+extern void AssertHandler(uint8 assertCause, uint8 assertSubcause);
+
+/*********************************************************************
  * PROFILE CALLBACKS
  */
 
@@ -402,7 +407,7 @@ static void HomeAutomation_init(void)
     // By setting this to zero, the device will go into the waiting state after
     // being discoverable for 30.72 second, and will not being advertising again
     // until the enabler is set back to TRUE
-    uint16_t advertOffTime = 1;
+    uint16_t advertOffTime = 0;
 
     uint8_t enableUpdateRequest = DEFAULT_ENABLE_UPDATE_REQUEST;
     uint16_t desiredMinInterval = DEFAULT_DESIRED_MIN_CONN_INTERVAL;
@@ -637,6 +642,10 @@ static uint8_t HomeAutomation_processStackMsg(ICall_Hdr *pMsg)
         {
           case HCI_COMMAND_COMPLETE_EVENT_CODE:
             // Process HCI Command Complete Event
+            break;
+
+          case HCI_BLE_HARDWARE_ERROR_EVENT_CODE:
+            AssertHandler(HAL_ASSERT_CAUSE_HARDWARE_ERROR, 0);
             break;
 
           default:

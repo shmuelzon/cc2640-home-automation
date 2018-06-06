@@ -5,11 +5,11 @@
  @brief main entry of the BLE stack sample application.
 
  Group: WCS, BTS
- Target Device: CC2650, CC2640, CC1350
+ Target Device: CC2650, CC2640
 
  ******************************************************************************
-
- Copyright (c) 2013-2016, Texas Instruments Incorporated
+ 
+ Copyright (c) 2013-2018, Texas Instruments Incorporated
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -40,8 +40,8 @@
  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
  ******************************************************************************
- Release Name: ble_sdk_2_02_01_18
- Release Date: 2016-10-26 15:20:04
+ Release Name: ble_sdk_2_02_02_25
+ Release Date: 2018-04-02 18:03:35
  *****************************************************************************/
 
 /*******************************************************************************

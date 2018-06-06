@@ -5,11 +5,11 @@
  @brief This file contains the Battery service.
 
  Group: WCS, BTS
- Target Device: CC2650, CC2640, CC1350
+ Target Device: CC2650, CC2640
 
  ******************************************************************************
  
- Copyright (c) 2012-2016, Texas Instruments Incorporated
+ Copyright (c) 2012-2018, Texas Instruments Incorporated
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -40,8 +40,8 @@
  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
  ******************************************************************************
- Release Name: ble_sdk_2_02_01_18
- Release Date: 2016-10-26 15:20:04
+ Release Name: ble_sdk_2_02_02_25
+ Release Date: 2018-04-02 18:03:35
  *****************************************************************************/
 
 /*********************************************************************
@@ -231,12 +231,12 @@ static void battNotifyLevel(void);
  * PROFILE CALLBACKS
  */
 // Battery Service Callbacks
-// Note: When an operation on a characteristic requires authorization and 
-// pfnAuthorizeAttrCB is not defined for that characteristic's service, the 
-// Stack will report a status of ATT_ERR_UNLIKELY to the client.  When an 
-// operation on a characteristic requires authorization the Stack will call 
+// Note: When an operation on a characteristic requires authorization and
+// pfnAuthorizeAttrCB is not defined for that characteristic's service, the
+// Stack will report a status of ATT_ERR_UNLIKELY to the client.  When an
+// operation on a characteristic requires authorization the Stack will call
 // pfnAuthorizeAttrCB to check a client's authorization prior to calling
-// pfnReadAttrCB or pfnWriteAttrCB, so no checks for authorization need to be 
+// pfnReadAttrCB or pfnWriteAttrCB, so no checks for authorization need to be
 // made within these functions.
 CONST gattServiceCBs_t battCBs =
 {

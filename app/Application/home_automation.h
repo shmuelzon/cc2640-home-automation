@@ -1,6 +1,6 @@
 /******************************************************************************
 
- Copyright (c) 2013-2016, Texas Instruments Incorporated
+ Copyright (c) 2013-2018, Texas Instruments Incorporated
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without

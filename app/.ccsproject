@@ -11,5 +11,5 @@
 	<createSlaveProjects value=""/>
 	<connection value="common/targetdb/connections/TIXDS100v3_Dot7_Connection.xml"/>
 	<isTargetManual value="true"/>
-	<origin value="C:/ti/simplelink/ble_sdk_2_02_01_18/examples/cc2650em/simple_peripheral/ccs/app"/>
+	<origin value="C:/ti/simplelink/ble_sdk_2_02_02_25/examples/cc2650em/simple_peripheral/ccs/app"/>
 </projectOptions>

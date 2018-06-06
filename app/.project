@@ -455,7 +455,7 @@
 	<variableList>
 		<variable>
 			<name>CC26XXWARE</name>
-			<value>file:/C:/ti/tirtos_cc13xx_cc26xx_2_20_01_08/products/cc26xxware_2_24_02_17393</value>
+			<value>file:/C:/ti/tirtos_cc13xx_cc26xx_2_21_01_08/products/cc26xxware_2_24_03_17272</value>
 		</variable>
 		<variable>
 			<name>ORG_PROJ_DIR</name>
@@ -463,23 +463,23 @@
 		</variable>
 		<variable>
 			<name>ORIGINAL_PROJECT_ROOT</name>
-			<value>file:/C:/ti/simplelink/ble_sdk_2_02_01_18/examples/cc2650em/simple_peripheral/ccs/app</value>
+			<value>file:/c:/ti/simplelink/ble_sdk_2_02_02_25/examples/cc2650em/simple_peripheral/ccs/app</value>
 		</variable>
 		<variable>
 			<name>ROM</name>
-			<value>$%7BPARENT-5-ORG_PROJ_DIR%7D/src/rom</value>
+			<value>${PARENT-5-ORG_PROJ_DIR}/src/rom</value>
 		</variable>
 		<variable>
 			<name>SRC_BLE_CORE</name>
-			<value>$%7BPARENT-5-ORG_PROJ_DIR%7D/src</value>
+			<value>${PARENT-5-ORG_PROJ_DIR}/src</value>
 		</variable>
 		<variable>
 			<name>SRC_COMMON</name>
-			<value>$%7BPARENT-5-ORG_PROJ_DIR%7D/src/components</value>
+			<value>${PARENT-5-ORG_PROJ_DIR}/src/components</value>
 		</variable>
 		<variable>
 			<name>SRC_EX</name>
-			<value>$%7BPARENT-5-ORG_PROJ_DIR%7D/src</value>
+			<value>${PARENT-5-ORG_PROJ_DIR}/src</value>
 		</variable>
 		<variable>
 			<name>TI_RTOS_BOARD_BASE</name>
@@ -487,11 +487,11 @@
 		</variable>
 		<variable>
 			<name>TI_RTOS_DRIVERS_BASE</name>
-			<value>file:/C:/ti/tirtos_cc13xx_cc26xx_2_20_01_08/products/tidrivers_cc13xx_cc26xx_2_20_01_10/packages</value>
+			<value>file:/C:/ti/tirtos_cc13xx_cc26xx_2_21_01_08/products/tidrivers_cc13xx_cc26xx_2_21_01_01/packages</value>
 		</variable>
 		<variable>
-			<name>Tools_BLE</name>
-			<value>$%7BPARENT-5-ORG_PROJ_DIR%7D/tools</value>
+			<name>TOOLS_BLE</name>
+			<value>${PARENT-5-ORG_PROJ_DIR}/tools</value>
 		</variable>
 	</variableList>
 </projectDescription>

@@ -129,7 +129,7 @@ const PowerCC26XX_Config PowerCC26XX_config = {
 UARTCC26XX_Object uartCC26XXObjects[CC26XX_UARTCOUNT];
 
 /* UART hardware parameter structure, also used to assign UART pins */
-const UARTCC26XX_HWAttrsV1 uartCC26XXHWAttrs[CC26XX_UARTCOUNT] = {
+const UARTCC26XX_HWAttrsV2 uartCC26XXHWAttrs[CC26XX_UARTCOUNT] = {
     {
         .baseAddr       = UART0_BASE,
         .powerMngrId    = PowerCC26XX_PERIPH_UART0,
