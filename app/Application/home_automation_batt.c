@@ -123,7 +123,7 @@ void HomeAutomationBatt_init(void)
 {
   // Add battery service.
   Batt_AddService();
-  Batt_Setup(2100, 3000, NULL, NULL);
+  Batt_Setup(Board_BATT_MIN, Board_BATT_MAX, NULL, NULL);
 
   // Register for Battery service callback.
   Batt_Register(&sensorConfigChangeCB);

@@ -134,6 +134,10 @@ extern const PIN_Config BoardGpioInitTable[];
 #define Board_CONTACT                       PIN_UNASSIGNED
 #define Board_MOTION                        PIN_UNASSIGNED
 
+/* Battery levels (mV) */
+#define Board_BATT_MAX                      3000
+#define Board_BATT_MIN                      2100
+
 /* Board specific I2C addresses */
 #define Board_OPT3001_ADDR                  0
 #define Board_BME280_ADDR                   0
