@@ -44,7 +44,6 @@
  Release Name: ble_sdk_2_02_02_25
  Release Date: 2018-04-02 18:03:35
  *****************************************************************************/
-#ifndef EXCLUDE_BATT
 
 /*********************************************************************
  * INCLUDES
@@ -53,6 +52,7 @@
 #include <ti/sysbios/knl/Semaphore.h>
 #include <ti/sysbios/knl/Queue.h>
 
+#include "board.h"
 #include "gatt.h"
 #include "gattservapp.h"
 #include "util.h"
@@ -60,6 +60,8 @@
 #include "battservice.h"
 #include "home_automation_batt.h"
 #include "home_automation.h"
+
+#ifndef EXCLUDE_BATT
 
 /*********************************************************************
  * MACROS

@@ -112,7 +112,11 @@
 #endif // FEATURE_OAD
 
 // Slave latency to use if automatic parameter update request is enabled
+#ifndef EXCLUDE_BATT
 #define DEFAULT_DESIRED_SLAVE_LATENCY         3
+#else
+#define DEFAULT_DESIRED_SLAVE_LATENCY         0
+#endif
 
 // Supervision timeout value (units of 10ms, 1000=10s) if automatic parameter
 // update request is enabled

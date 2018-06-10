@@ -56,6 +56,7 @@ extern "C"
 /*********************************************************************
  * INCLUDES
  */
+#include "board.h"
 #include "home_automation.h"
 
 /*********************************************************************
@@ -96,8 +97,8 @@ extern void HomeAutomationBatt_reset(void);
 /* Battery module not included */
 
 #define HomeAutomationBatt_init()
-#define HomeAutomatioBatt_processCharChangeEvt(paramID)
-#define HomeAutomatioBatt_processSensorEvent()
+#define HomeAutomationBatt_processCharChangeEvt(paramID)
+#define HomeAutomationBatt_processSensorEvent()
 #define HomeAutomationBatt_reset()
 
 #endif // EXCLUDE_BATT
