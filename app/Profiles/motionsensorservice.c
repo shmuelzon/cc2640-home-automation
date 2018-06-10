@@ -26,11 +26,6 @@
 // Motion Sensor state UUID
 #define MOTION_SENSOR_STATE_UUID 0x2F31
 
-// Position of motion sensor state in attribute array
-#define MOTION_SENSOR_STATE_LEVEL_VALUE_IDX 2
-
-#define MOTION_SENSOR_STATE_VALUE_LEN 1
-
 /*********************************************************************
  * TYPEDEFS
  */
@@ -143,9 +138,6 @@ static bStatus_t MotionSensorWriteAttrCB(uint16_t connHandle,
   gattAttribute_t *pAttr, uint8_t *pValue, uint16_t len, uint16_t offset,
   uint8_t method);
 
-static void MotionSensorNotify(uint16_t connHandle);
-static void MotionSensorNotifyState(void);
-
 /*********************************************************************
  * PROFILE CALLBACKS
  */
@@ -215,7 +207,10 @@ bStatus_t MotionSensor_SetParameter(uint8_t param, uint8_t len, void *value)
         if (state != motionSensorState)
         {
           motionSensorState = state;
-          MotionSensorNotifyState();
+          ret = GATTServApp_ProcessCharCfg(motionSensorStateClientCharCfg,
+            &motionSensorState, FALSE, motionSensorAttrTbl,
+            GATT_NUM_ATTRS(motionSensorAttrTbl), INVALID_TASK_ID,
+            MotionSensorReadAttrCB);
         }
       }
       else
@@ -333,60 +328,6 @@ static bStatus_t MotionSensorWriteAttrCB(uint16_t connHandle,
   }
 
   return (status);
-}
-
-/*********************************************************************
- * @fn          MotionSensorNotify
- *
- * @brief       Send a notification of the motion sensor state characteristic.
- *
- * @param       connHandle - linkDB item
- *
- * @return      None.
- */
-static void MotionSensorNotify(uint16_t connHandle)
-{
-  uint16_t value = GATTServApp_ReadCharCfg(connHandle,
-    motionSensorStateClientCharCfg);
-
-  if (value & GATT_CLIENT_CFG_NOTIFY)
-  {
-    attHandleValueNoti_t noti;
-
-    noti.pValue = GATT_bm_alloc(connHandle, ATT_HANDLE_VALUE_NOTI,
-      MOTION_SENSOR_STATE_VALUE_LEN, NULL);
-    if (noti.pValue != NULL)
-    {
-      noti.handle =
-        motionSensorAttrTbl[MOTION_SENSOR_STATE_LEVEL_VALUE_IDX].handle;
-      noti.len = MOTION_SENSOR_STATE_VALUE_LEN;
-      noti.pValue[0] = motionSensorState;
-
-      if (GATT_Notification(connHandle, &noti, FALSE) != SUCCESS)
-        GATT_bm_free((gattMsg_t *)&noti, ATT_HANDLE_VALUE_NOTI);
-    }
-  }
-}
-
-/*********************************************************************
- * @fn      MotionSensorNotifyState
- *
- * @brief   Send a notification of the motion sensor state
- *          characteristic if a connection is established.
- *
- * @return  None.
- */
-static void MotionSensorNotifyState(void)
-{
-  uint8_t i;
-  for (i = 0; i < linkDBNumConns; i++)
-  {
-    uint16_t connHandle = motionSensorStateClientCharCfg[i].connHandle;
-
-    // Send notification to connected device.
-    if (connHandle != INVALID_CONNHANDLE)
-      MotionSensorNotify(connHandle);
-  }
 }
 
 /*********************************************************************

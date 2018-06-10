@@ -26,11 +26,6 @@
 // Contact Sensor state UUID
 #define CONTACT_SENSOR_STATE_UUID 0x2F21
 
-// Position of contact sensor state in attribute array
-#define CONTACT_SENSOR_STATE_LEVEL_VALUE_IDX 2
-
-#define CONTACT_SENSOR_STATE_VALUE_LEN 1
-
 /*********************************************************************
  * TYPEDEFS
  */
@@ -143,9 +138,6 @@ static bStatus_t ContactSensorWriteAttrCB(uint16_t connHandle,
   gattAttribute_t *pAttr, uint8_t *pValue, uint16_t len, uint16_t offset,
   uint8_t method);
 
-static void ContactSensorNotify(uint16_t connHandle);
-static void ContactSensorNotifyState(void);
-
 /*********************************************************************
  * PROFILE CALLBACKS
  */
@@ -215,7 +207,10 @@ bStatus_t ContactSensor_SetParameter(uint8_t param, uint8_t len, void *value)
         if (state != contactSensorState)
         {
           contactSensorState = state;
-          ContactSensorNotifyState();
+          ret = GATTServApp_ProcessCharCfg(contactSensorStateClientCharCfg,
+            &contactSensorState, FALSE, contactSensorAttrTbl,
+            GATT_NUM_ATTRS(contactSensorAttrTbl), INVALID_TASK_ID,
+            ContactSensorReadAttrCB);
         }
       }
       else
@@ -333,60 +328,6 @@ static bStatus_t ContactSensorWriteAttrCB(uint16_t connHandle,
   }
 
   return (status);
-}
-
-/*********************************************************************
- * @fn          ContactSensorNotify
- *
- * @brief       Send a notification of the contact sensor state characteristic.
- *
- * @param       connHandle - linkDB item
- *
- * @return      None.
- */
-static void ContactSensorNotify(uint16_t connHandle)
-{
-  uint16_t value = GATTServApp_ReadCharCfg(connHandle,
-    contactSensorStateClientCharCfg);
-
-  if (value & GATT_CLIENT_CFG_NOTIFY)
-  {
-    attHandleValueNoti_t noti;
-
-    noti.pValue = GATT_bm_alloc(connHandle, ATT_HANDLE_VALUE_NOTI,
-      CONTACT_SENSOR_STATE_VALUE_LEN, NULL);
-    if (noti.pValue != NULL)
-    {
-      noti.handle =
-        contactSensorAttrTbl[CONTACT_SENSOR_STATE_LEVEL_VALUE_IDX].handle;
-      noti.len = CONTACT_SENSOR_STATE_VALUE_LEN;
-      noti.pValue[0] = contactSensorState;
-
-      if (GATT_Notification(connHandle, &noti, FALSE) != SUCCESS)
-        GATT_bm_free((gattMsg_t *)&noti, ATT_HANDLE_VALUE_NOTI);
-    }
-  }
-}
-
-/*********************************************************************
- * @fn      ContactSensorNotifyState
- *
- * @brief   Send a notification of the contact sensor state
- *          characteristic if a connection is established.
- *
- * @return  None.
- */
-static void ContactSensorNotifyState(void)
-{
-  uint8_t i;
-  for (i = 0; i < linkDBNumConns; i++)
-  {
-    uint16_t connHandle = contactSensorStateClientCharCfg[i].connHandle;
-
-    // Send notification to connected device.
-    if (connHandle != INVALID_CONNHANDLE)
-      ContactSensorNotify(connHandle);
-  }
 }
 
 /*********************************************************************

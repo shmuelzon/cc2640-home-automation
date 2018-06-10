@@ -26,11 +26,6 @@
 // Switch state UUID
 #define SWITCH_STATE_UUID 0x2F11
 
-// Position of switch state in attribute array
-#define SWITCH_STATE_LEVEL_VALUE_IDX 2
-
-#define SWITCH_STATE_VALUE_LEN 1
-
 /*********************************************************************
  * TYPEDEFS
  */
@@ -141,9 +136,6 @@ static bStatus_t SwitchReadAttrCB(uint16_t connHandle, gattAttribute_t *pAttr,
 static bStatus_t SwitchWriteAttrCB(uint16_t connHandle, gattAttribute_t *pAttr,
   uint8_t *pValue, uint16_t len, uint16_t offset, uint8_t method);
 
-static void SwitchNotify(uint16_t connHandle);
-static void SwitchNotifyState(void);
-
 /*********************************************************************
  * PROFILE CALLBACKS
  */
@@ -212,7 +204,10 @@ bStatus_t Switch_SetParameter(uint8_t param, uint8_t len, void *value)
         if (state != switchState)
         {
           switchState = state;
-          SwitchNotifyState();
+          ret = GATTServApp_ProcessCharCfg(switchStateClientCharCfg,
+            &switchState, FALSE, switchAttrTbl,
+            GATT_NUM_ATTRS(switchAttrTbl), INVALID_TASK_ID,
+            SwitchReadAttrCB);
         }
       }
       else
@@ -329,59 +324,6 @@ static bStatus_t SwitchWriteAttrCB(uint16_t connHandle, gattAttribute_t *pAttr,
   }
 
   return (status);
-}
-
-/*********************************************************************
- * @fn          SwitchNotify
- *
- * @brief       Send a notification of the switch state characteristic.
- *
- * @param       connHandle - linkDB item
- *
- * @return      None.
- */
-static void SwitchNotify(uint16_t connHandle)
-{
-  uint16_t value = GATTServApp_ReadCharCfg(connHandle,
-    switchStateClientCharCfg);
-
-  if (value & GATT_CLIENT_CFG_NOTIFY)
-  {
-    attHandleValueNoti_t noti;
-
-    noti.pValue = GATT_bm_alloc(connHandle, ATT_HANDLE_VALUE_NOTI,
-      SWITCH_STATE_VALUE_LEN, NULL);
-    if (noti.pValue != NULL)
-    {
-      noti.handle = switchAttrTbl[SWITCH_STATE_LEVEL_VALUE_IDX].handle;
-      noti.len = SWITCH_STATE_VALUE_LEN;
-      noti.pValue[0] = switchState;
-
-      if (GATT_Notification(connHandle, &noti, FALSE) != SUCCESS)
-        GATT_bm_free((gattMsg_t *)&noti, ATT_HANDLE_VALUE_NOTI);
-    }
-  }
-}
-
-/*********************************************************************
- * @fn      SwitchNotifyState
- *
- * @brief   Send a notification of the switch state
- *          characteristic if a connection is established.
- *
- * @return  None.
- */
-static void SwitchNotifyState(void)
-{
-  uint8_t i;
-  for (i = 0; i < linkDBNumConns; i++)
-  {
-    uint16_t connHandle = switchStateClientCharCfg[i].connHandle;
-
-    // Send notification to connected device.
-    if (connHandle != INVALID_CONNHANDLE)
-      SwitchNotify(connHandle);
-  }
 }
 
 /*********************************************************************

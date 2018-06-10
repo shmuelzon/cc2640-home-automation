@@ -26,11 +26,6 @@
 // Relay state UUID
 #define RELAY_STATE_UUID 0x2F01
 
-// Position of relay state in attribute array
-#define RELAY_STATE_VALUE_IDX 2
-
-#define RELAY_STATE_VALUE_LEN 1
-
 /*********************************************************************
  * TYPEDEFS
  */
@@ -144,9 +139,6 @@ static bStatus_t RelayReadAttrCB(uint16_t connHandle, gattAttribute_t *pAttr,
 static bStatus_t RelayWriteAttrCB(uint16_t connHandle, gattAttribute_t *pAttr,
   uint8_t *pValue, uint16_t len, uint16_t offset, uint8_t method);
 
-static void RelayNotifyState(void);
-static void RelayNotify(uint16_t connHandle);
-
 /*********************************************************************
  * PROFILE CALLBACKS
  */
@@ -215,7 +207,10 @@ bStatus_t Relay_SetParameter(uint8_t param, uint8_t len, void *value)
         if (state != relayState)
         {
           relayState = state;
-          RelayNotifyState();
+          ret = GATTServApp_ProcessCharCfg(relayStateClientCharCfg,
+            &relayState, FALSE, relayAttrTbl,
+            GATT_NUM_ATTRS(relayAttrTbl), INVALID_TASK_ID,
+            RelayReadAttrCB);
         }
       }
       else
@@ -386,60 +381,6 @@ static bStatus_t RelayWriteAttrCB(uint16_t connHandle, gattAttribute_t *pAttr,
 void Relay_Setup(relayServiceStateChangeCB_t cCB)
 {
   relayServiceStateChangeCB = cCB;
-}
-
-
-/*********************************************************************
- * @fn      RelayNotifyState
- *
- * @brief   Send a notification of the relay state
- *          characteristic if a connection is established.
- *
- * @return  None.
- */
-static void RelayNotifyState(void)
-{
-  uint8_t i;
-  for (i = 0; i < linkDBNumConns; i++)
-  {
-    uint16_t connHandle = relayStateClientCharCfg[i].connHandle;
-
-    // Send notification to connected device.
-    if (connHandle != INVALID_CONNHANDLE)
-      RelayNotify(connHandle);
-  }
-}
-
-/*********************************************************************
- * @fn          RelayNotify
- *
- * @brief       Send a notification of the relay state characteristic.
- *
- * @param       connHandle - linkDB item
- *
- * @return      None.
- */
-static void RelayNotify(uint16_t connHandle)
-{
-  uint16_t value = GATTServApp_ReadCharCfg(connHandle,
-    relayStateClientCharCfg);
-
-  if (value & GATT_CLIENT_CFG_NOTIFY)
-  {
-    attHandleValueNoti_t noti;
-
-    noti.pValue = GATT_bm_alloc(connHandle, ATT_HANDLE_VALUE_NOTI,
-      RELAY_STATE_VALUE_LEN, NULL);
-    if (noti.pValue != NULL)
-    {
-      noti.handle = relayAttrTbl[RELAY_STATE_VALUE_IDX].handle;
-      noti.len = RELAY_STATE_VALUE_LEN;
-      noti.pValue[0] = relayState;
-
-      if (GATT_Notification(connHandle, &noti, FALSE) != SUCCESS)
-        GATT_bm_free((gattMsg_t *)&noti, ATT_HANDLE_VALUE_NOTI);
-    }
-  }
 }
 
 /*********************************************************************
