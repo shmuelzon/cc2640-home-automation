@@ -77,6 +77,7 @@
 #include "home_automation_keys.h"
 #include "home_automation_relay.h"
 #include "home_automation_env.h"
+#include "home_automation_rgb_led.h"
 
 #if defined( USE_FPGA ) || defined( DEBUG_SW_TRACE )
 #include <driverlib/ioc.h>
@@ -489,6 +490,7 @@ static void HomeAutomation_init(void)
   // Auxiliary modules
   HomeAutomationKeys_init(); // Input keys (buttons, switches, etc.)
   HomeAutomationRelay_init(); // Relay
+  HomeAutomationRGBLED_init(); // RGB LEDs
 
   // Start the Device
   VOID GAPRole_StartDevice(&HomeAutomation_gapRoleCBs);
@@ -594,6 +596,7 @@ static void HomeAutomation_taskFxn(UArg a0, UArg a1)
       HomeAutomationRelay_processEvent();
       HomeAutomationBatt_processSensorEvent();
       HomeAutomationEnv_processEvent();
+      HomeAutomationRGBLED_processEvent();
     }
 
 #ifdef FEATURE_OAD
@@ -1048,6 +1051,9 @@ static void HomeAutomation_processCharValueChangeEvt(uint8_t serviceID,
   case SERVICE_ID_RELAY:
     HomeAutomationRelay_processCharChangeEvt(paramID);
     break;
+  case SERVICE_ID_RGBLED:
+    HomeAutomationRGBLED_processCharChangeEvt(paramID);
+    break;
   default:
     break;
   }
@@ -1135,6 +1141,7 @@ static void HomeAutomation_resetAllModules(void)
   HomeAutomationKeys_reset();
   HomeAutomationRelay_reset();
   HomeAutomationEnv_reset();
+  HomeAutomationRGBLED_reset();
 }
 
 /*********************************************************************

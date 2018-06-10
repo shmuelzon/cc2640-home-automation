@@ -63,6 +63,7 @@ extern PIN_Handle haPinHandle;
 #define SERVICE_ID_KEYS      2
 #define SERVICE_ID_RELAY     3
 #define SERVICE_ID_ENV       4
+#define SERVICE_ID_RGBLED    5
 
 /*********************************************************************
  * MACROS

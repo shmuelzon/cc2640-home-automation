@@ -129,6 +129,9 @@ extern const PIN_Config BoardGpioInitTable[];
 /* Outputs */
 #define Board_RELAY_SET                     IOID_7
 #define Board_RELAY_RESET                   IOID_8
+#define Board_WS2812_SPI                    Board_SPI0
+#define Board_WS2812_NUM_LEDS               0
+#define Board_RGB_NUM_LEDS                  (Board_WS2812_NUM_LEDS)
 /* Sensors */
 #define Board_SWITCH                        IOID_5
 #define Board_BUTTON                        PIN_UNASSIGNED
