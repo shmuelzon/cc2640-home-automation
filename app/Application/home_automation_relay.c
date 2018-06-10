@@ -5,6 +5,7 @@
 #include "gatt.h"
 #include "gattservapp.h"
 #include "home_automation_relay.h"
+#include "home_automation_rgb_led.h"
 #include "board.h"
 #include "peripheral.h"
 #include "util.h"
@@ -198,6 +199,8 @@ static void HomeAutomationRelay_StateChangeCB(void)
  */
 void HomeAutomationRelay_StateSet(uint8_t on)
 {
+  int i;
+
   if (Util_isActive(&periodRelay))
     Util_stopClock(&periodRelay);
 
@@ -214,6 +217,10 @@ void HomeAutomationRelay_StateSet(uint8_t on)
 #else
   PIN_setOutputValue(haPinHandle, Board_RELAY_SET, on);
 #endif
+
+  for (i = 0; i < Board_RGB_NUM_LEDS; i++)
+    HomeAutomationRGBLED_SetLedColor(i, on ? 50 : 0, 0, 0);
+  HomeAutomationRGBLED_Update();
 
   // Save new state in persistent storage
   osal_snv_write(RELAY_SNV_STATE, sizeof(on), &on);
