@@ -150,6 +150,9 @@
 #ifdef HAS_SWITCH
 #define NAME 'S', 'w', 'i', 't', 'c', 'h'
 #define NAME_LEN 6
+#elif defined(HAS_BUTTON) && Board_RELAY_SET != PIN_UNASSIGNED
+#define NAME 'W', 'a', 't', 'e', 'r', 'H', 'e', 'a', 't', 'e', 'r'
+#define NAME_LEN 11
 #elif defined(HAS_CONTACT)
 #define NAME 'C', 'o', 'n', 't', 'a', 'c', 't'
 #define NAME_LEN 7
