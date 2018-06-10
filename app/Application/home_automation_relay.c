@@ -144,9 +144,13 @@ void HomeAutomationRelay_reset(void)
 {
   uint8_t relayState;
 
+#if Board_RELAY_RESET != PIN_UNASSIGNED
   // Load last state from persistent storage
   if (osal_snv_read(RELAY_SNV_STATE, sizeof(relayState), &relayState) == NV_OPER_FAILED)
      relayState = 0xFF;
+#else
+  relayState = PIN_getOutputValue(Board_RELAY_SET);
+#endif
   Relay_SetParameter(RELAY_PARAM_STATE, sizeof(relayState), &relayState);
 
   events = 0;
@@ -197,6 +201,7 @@ void HomeAutomationRelay_StateSet(uint8_t on)
   if (Util_isActive(&periodRelay))
     Util_stopClock(&periodRelay);
 
+#if Board_RELAY_RESET != PIN_UNASSIGNED
   // Reset both GPIOs
   PIN_setOutputValue(haPinHandle, Board_RELAY_SET, 0);
   PIN_setOutputValue(haPinHandle, Board_RELAY_RESET, 0);
@@ -206,6 +211,9 @@ void HomeAutomationRelay_StateSet(uint8_t on)
 
   // Start a timer to reset the GPIOs
   Util_startClock(&periodRelay);
+#else
+  PIN_setOutputValue(haPinHandle, Board_RELAY_SET, on);
+#endif
 
   // Save new state in persistent storage
   osal_snv_write(RELAY_SNV_STATE, sizeof(on), &on);
@@ -214,7 +222,7 @@ void HomeAutomationRelay_StateSet(uint8_t on)
 /*********************************************************************
  * @fn      HomeAutomationRelay_StateStop
  *
- * @brief   Finish setting the relay state.
+ * @brief   Finish setting the relay state, relevant only for latching relays.
  *
  * @return  None.
  */
