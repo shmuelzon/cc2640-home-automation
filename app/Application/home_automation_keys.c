@@ -79,7 +79,7 @@ static void HomeAutomationKeys_clockHandler(UArg arg);
  */
 void HomeAutomationKeys_init(void)
 {
-#ifdef HAS_SWITCH
+#if defined(HAS_SWITCH) || defined(HAS_BUTTON)
   // Add switch service
   Switch_AddService();
 #endif
@@ -116,6 +116,23 @@ void HomeAutomationKeys_init(void)
  */
 #ifdef HAS_SWITCH
 void HomeAutomationKeys_processKeySwitch(void)
+{
+  if (!Util_isActive(&periodDebounce))
+    Util_startClock(&periodDebounce);
+}
+#endif
+
+/*********************************************************************
+ * @fn      HomeAutomationKeys_processKeyButton
+ *
+ * @brief   Interrupt handler for push button
+ *
+ * @param   none
+ *
+ * @return  none
+ */
+#ifdef HAS_BUTTON
+void HomeAutomationKeys_processKeyButton(void)
 {
   if (!Util_isActive(&periodDebounce))
     Util_startClock(&periodDebounce);
@@ -173,15 +190,24 @@ void HomeAutomationKeys_processEvent(void)
 
     events &= ~KEYS_DEBOUNCE_EVT;
 
-#ifdef HAS_SWITCH
+#if defined(HAS_SWITCH) || defined(HAS_BUTTON)
     Switch_GetParameter(SWITCH_PARAM_STATE, &prev);
+#ifdef HAS_SWITCH
     cur = PIN_getInputValue(Board_SWITCH);
+#elif defined(HAS_BUTTON)
+    cur = PIN_getInputValue(Board_BUTTON);
+#endif
 
     if (prev != cur)
     {
       // Save new switch state
       Switch_SetParameter(SWITCH_PARAM_STATE, 1, &cur);
-      HomeAutomationRelay_Toggle();
+#ifdef HAS_BUTTON
+      if (cur == 1) /* Pressed */
+#endif
+      {
+        HomeAutomationRelay_Toggle();
+      }
     }
 #endif
 
@@ -232,12 +258,16 @@ void HomeAutomationKeys_processEvent(void)
  */
 void HomeAutomationKeys_reset(void)
 {
-#ifdef HAS_SWITCH
+#if defined(HAS_SWITCH) || defined(HAS_BUTTON)
   {
     uint8_t switchState;
 
     // Set current state of switch
+#ifdef HAS_SWITCH
     switchState = PIN_getInputValue(Board_SWITCH);
+#elif defined(HAS_BUTTON)
+    switchState = PIN_getInputValue(Board_BUTTON);
+#endif
     Switch_SetParameter(SWITCH_PARAM_STATE, 1, &switchState);
   }
 #endif

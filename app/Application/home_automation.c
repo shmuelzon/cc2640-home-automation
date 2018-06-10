@@ -1156,6 +1156,11 @@ static void HomeAutomation_intCb(PIN_Handle handle, PIN_Id pinId)
       HomeAutomationKeys_processKeySwitch();
       break;
 #endif
+#ifdef HAS_BUTTON
+  case Board_BUTTON:
+      HomeAutomationKeys_processKeyButton();
+      break;
+#endif
 #ifdef HAS_CONTACT
   case Board_CONTACT:
       HomeAutomationKeys_processKeyContact();
