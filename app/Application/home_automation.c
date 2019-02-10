@@ -160,6 +160,9 @@
 #elif defined(HAS_MOTION)
 #define NAME 'M', 'o', 't', 'i', 'o', 'n'
 #define NAME_LEN 6
+#elif Board_THERMISTOR != PIN_UNASSIGNED
+#define NAME 'T', 'e', 'm', 'p', 'e', 'r', 'a', 't', 'u', 'r', 'e'
+#define NAME_LEN 11
 #else
 #error No Name defined for device
 #endif

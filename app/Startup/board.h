@@ -138,6 +138,10 @@ extern const PIN_Config BoardGpioInitTable[];
 #define Board_CONTACT                       PIN_UNASSIGNED
 #define Board_MOTION                        PIN_UNASSIGNED
 
+/* Thermistor */
+#define Board_THERMISTOR_POWER              PIN_UNASSIGNED
+#define Board_THERMISTOR                    PIN_UNASSIGNED
+
 /* Battery levels (mV) */
 #define Board_BATT_MAX                      3000
 #define Board_BATT_MIN                      2100

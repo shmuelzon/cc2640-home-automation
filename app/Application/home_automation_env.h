@@ -27,7 +27,7 @@ extern "C"
 #define HAS_BME280
 #endif
 
-#if defined(HAS_OPT3001) || defined(HAS_BME280)
+#if defined(HAS_OPT3001) || defined(HAS_BME280) || Board_THERMISTOR != PIN_UNASSIGNED
 #define HAS_ENV
 #endif
 

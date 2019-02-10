@@ -9,6 +9,7 @@
 #include "util.h"
 #include "SensorOpt3001.h"
 #include "SensorBme280.h"
+#include "SensorThermistor.h"
 #include "environmentalsensingservice.h"
 
 #include <ti/sysbios/knl/Clock.h>
@@ -66,6 +67,11 @@ void HomeAutomationEnv_init(void)
   services |= ESS_SERVICE_PRESSURE | ESS_SERVICE_TEMPERATURE | ESS_SERVICE_HUMIDITY;
   SensorBme280_init();
   convTime = MAX(convTime, SensorBme280_measurementTime());
+#endif
+#if Board_THERMISTOR != PIN_UNASSIGNED
+  SensorThermistor_init();
+  services |= ESS_SERVICE_TEMPERATURE;
+  convTime = MAX(convTime, SensorThermistor_measurementTime());
 #endif
   // Add relevant services
   EnvironmentalSensing_AddService(services);
@@ -125,6 +131,9 @@ void HomeAutomationEnv_reset(void)
 #ifdef HAS_BME280
   SensorBme280_enable(false);
 #endif
+#if Board_THERMISTOR != PIN_UNASSIGNED
+  SensorThermistor_enable(false);
+#endif
   events = 0;
 }
 
@@ -160,6 +169,9 @@ static void HomeAutomationEnv_pollSensors(void)
 #endif
 #ifdef HAS_BME280
   SensorBme280_enable(true);
+#endif
+#if Board_THERMISTOR != PIN_UNASSIGNED
+  SensorThermistor_enable(true);
 #endif
   Util_startClock(&periodDataReady);
 }
@@ -205,6 +217,16 @@ static void HomeAutomationEnv_dataReady(void)
     }
 
     SensorBme280_enable(false);
+  }
+#endif
+#if Board_THERMISTOR != PIN_UNASSIGNED
+  {
+    int16_t temp;
+
+    if (SensorThermistor_read(&temp))
+      EnvironmentalSensing_SetParameter(TEMPERATURE_PARAM_VALUE, sizeof(temp), &temp);
+
+    SensorThermistor_enable(false);
   }
 #endif
   Util_startClock(&periodPoll);
