@@ -26,6 +26,12 @@
 // Relay state UUID
 #define RELAY_STATE_UUID 0x2F01
 
+#ifndef DISABLE_AUTHENTICATION
+#define NOTIFY_AUTH TRUE
+#else
+#define NOTIFY_AUTH FALSE
+#endif
+
 /*********************************************************************
  * TYPEDEFS
  */
@@ -208,7 +214,7 @@ bStatus_t Relay_SetParameter(uint8_t param, uint8_t len, void *value)
         {
           relayState = state;
           ret = GATTServApp_ProcessCharCfg(relayStateClientCharCfg,
-            &relayState, FALSE, relayAttrTbl,
+            &relayState, NOTIFY_AUTH, relayAttrTbl,
             GATT_NUM_ATTRS(relayAttrTbl), INVALID_TASK_ID,
             RelayReadAttrCB);
         }

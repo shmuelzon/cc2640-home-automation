@@ -26,6 +26,12 @@
 // Motion Sensor state UUID
 #define MOTION_SENSOR_STATE_UUID 0x2F31
 
+#ifndef DISABLE_AUTHENTICATION
+#define NOTIFY_AUTH TRUE
+#else
+#define NOTIFY_AUTH FALSE
+#endif
+
 /*********************************************************************
  * TYPEDEFS
  */
@@ -208,7 +214,7 @@ bStatus_t MotionSensor_SetParameter(uint8_t param, uint8_t len, void *value)
         {
           motionSensorState = state;
           ret = GATTServApp_ProcessCharCfg(motionSensorStateClientCharCfg,
-            &motionSensorState, FALSE, motionSensorAttrTbl,
+            &motionSensorState, NOTIFY_AUTH, motionSensorAttrTbl,
             GATT_NUM_ATTRS(motionSensorAttrTbl), INVALID_TASK_ID,
             MotionSensorReadAttrCB);
         }

@@ -26,6 +26,12 @@
 // Contact Sensor state UUID
 #define CONTACT_SENSOR_STATE_UUID 0x2F21
 
+#ifndef DISABLE_AUTHENTICATION
+#define NOTIFY_AUTH TRUE
+#else
+#define NOTIFY_AUTH FALSE
+#endif
+
 /*********************************************************************
  * TYPEDEFS
  */
@@ -113,7 +119,11 @@ static gattAttribute_t contactSensorAttrTbl[] =
       // Contact Sensor State Client Characteristic Configuration
       {
         { ATT_BT_UUID_SIZE, clientCharCfgUUID },
+#ifndef DISABLE_AUTHENTICATION
+        GATT_PERMIT_READ | GATT_PERMIT_AUTHEN_WRITE,
+#else
         GATT_PERMIT_READ | GATT_PERMIT_WRITE,
+#endif
         0,
         (uint8_t *)&contactSensorStateClientCharCfg
       },
@@ -208,7 +218,7 @@ bStatus_t ContactSensor_SetParameter(uint8_t param, uint8_t len, void *value)
         {
           contactSensorState = state;
           ret = GATTServApp_ProcessCharCfg(contactSensorStateClientCharCfg,
-            &contactSensorState, FALSE, contactSensorAttrTbl,
+            &contactSensorState, NOTIFY_AUTH, contactSensorAttrTbl,
             GATT_NUM_ATTRS(contactSensorAttrTbl), INVALID_TASK_ID,
             ContactSensorReadAttrCB);
         }

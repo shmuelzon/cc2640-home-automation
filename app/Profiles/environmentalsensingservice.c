@@ -39,6 +39,12 @@
 #define HUMIDITY_UUID 0x2A6F
 #define HUMIDITY_VALUE_LEN 2
 
+#ifndef DISABLE_AUTHENTICATION
+#define NOTIFY_AUTH TRUE
+#else
+#define NOTIFY_AUTH FALSE
+#endif
+
 /*********************************************************************
  * TYPEDEFS
  */
@@ -455,7 +461,7 @@ bStatus_t EnvironmentalSensing_SetParameter(uint8_t param, uint8_t len, void *va
         {
           luminanceValue = val;
           // See if Notification has been enabled
-          ret = GATTServApp_ProcessCharCfg(luminanceClientCharCfg, (uint8_t *)&luminanceValue, FALSE,
+          ret = GATTServApp_ProcessCharCfg(luminanceClientCharCfg, (uint8_t *)&luminanceValue, NOTIFY_AUTH,
             environmentalSensingAttrTbl, environmentalSensingAttrTblSize,
             INVALID_TASK_ID, EnvironmentalSensingReadAttrCB);
         }
@@ -472,7 +478,7 @@ bStatus_t EnvironmentalSensing_SetParameter(uint8_t param, uint8_t len, void *va
         {
           pressureValue = val;
           // See if Notification has been enabled
-          ret = GATTServApp_ProcessCharCfg(pressureClientCharCfg, (uint8_t *)&pressureValue, FALSE,
+          ret = GATTServApp_ProcessCharCfg(pressureClientCharCfg, (uint8_t *)&pressureValue, NOTIFY_AUTH,
             environmentalSensingAttrTbl, environmentalSensingAttrTblSize,
             INVALID_TASK_ID, EnvironmentalSensingReadAttrCB);
         }
@@ -489,7 +495,7 @@ bStatus_t EnvironmentalSensing_SetParameter(uint8_t param, uint8_t len, void *va
         {
           temperatureValue = val;
           // See if Notification has been enabled
-          ret = GATTServApp_ProcessCharCfg(temperatureClientCharCfg, (uint8_t *)&temperatureValue, FALSE,
+          ret = GATTServApp_ProcessCharCfg(temperatureClientCharCfg, (uint8_t *)&temperatureValue, NOTIFY_AUTH,
             environmentalSensingAttrTbl, environmentalSensingAttrTblSize,
             INVALID_TASK_ID, EnvironmentalSensingReadAttrCB);
         }
@@ -506,7 +512,7 @@ bStatus_t EnvironmentalSensing_SetParameter(uint8_t param, uint8_t len, void *va
         {
           humidityValue = val;
           // See if Notification has been enabled
-          ret = GATTServApp_ProcessCharCfg(humidityClientCharCfg, (uint8_t *)&humidityValue, FALSE,
+          ret = GATTServApp_ProcessCharCfg(humidityClientCharCfg, (uint8_t *)&humidityValue, NOTIFY_AUTH,
             environmentalSensingAttrTbl, environmentalSensingAttrTblSize,
             INVALID_TASK_ID, EnvironmentalSensingReadAttrCB);
         }

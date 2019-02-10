@@ -26,6 +26,12 @@
 // Switch state UUID
 #define SWITCH_STATE_UUID 0x2F11
 
+#ifndef DISABLE_AUTHENTICATION
+#define NOTIFY_AUTH TRUE
+#else
+#define NOTIFY_AUTH FALSE
+#endif
+
 /*********************************************************************
  * TYPEDEFS
  */
@@ -205,7 +211,7 @@ bStatus_t Switch_SetParameter(uint8_t param, uint8_t len, void *value)
         {
           switchState = state;
           ret = GATTServApp_ProcessCharCfg(switchStateClientCharCfg,
-            &switchState, FALSE, switchAttrTbl,
+            &switchState, NOTIFY_AUTH, switchAttrTbl,
             GATT_NUM_ATTRS(switchAttrTbl), INVALID_TASK_ID,
             SwitchReadAttrCB);
         }

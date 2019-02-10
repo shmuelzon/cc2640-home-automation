@@ -30,6 +30,12 @@
 
 #define RGB_LED_COLOR_VALUE_LEN (3 * Board_RGB_NUM_LEDS)
 
+#ifndef DISABLE_AUTHENTICATION
+#define NOTIFY_AUTH TRUE
+#else
+#define NOTIFY_AUTH FALSE
+#endif
+
 /*********************************************************************
  * TYPEDEFS
  */
@@ -209,7 +215,7 @@ bStatus_t RGBLED_SetParameter(uint8_t param, uint8_t len, void *value)
         if (memcmp(rgbLedColor, value, RGB_LED_COLOR_VALUE_LEN))
         {
           memcpy(rgbLedColor, value, RGB_LED_COLOR_VALUE_LEN);
-          ret = GATTServApp_ProcessCharCfg(rgbLedColorClientCharCfg, rgbLedColor, FALSE,
+          ret = GATTServApp_ProcessCharCfg(rgbLedColorClientCharCfg, rgbLedColor, NOTIFY_AUTH,
             rgbLedAttrTbl, GATT_NUM_ATTRS(rgbLedAttrTbl),
             INVALID_TASK_ID, RGBLEDReadAttrCB);
         }
