@@ -183,6 +183,8 @@ static void HomeAutomationEnv_dataReady(void)
       tmp = res * 100;
       EnvironmentalSensing_SetParameter(LUMINANCE_PARAM_VALUE, sizeof(tmp), &tmp);
     }
+
+    SensorOpt3001_enable(false);
   }
 #endif
 #ifdef HAS_BME280
@@ -201,6 +203,8 @@ static void HomeAutomationEnv_dataReady(void)
       tmp2 = hum / 1024.0 * 100; // Convert Q22.10 to 0.01 resolution
       EnvironmentalSensing_SetParameter(HUMIDITY_PARAM_VALUE, sizeof(tmp2), &tmp2);
     }
+
+    SensorBme280_enable(false);
   }
 #endif
   Util_startClock(&periodPoll);
