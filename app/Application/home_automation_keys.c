@@ -193,9 +193,9 @@ void HomeAutomationKeys_processEvent(void)
 #if defined(HAS_SWITCH) || defined(HAS_BUTTON)
     Switch_GetParameter(SWITCH_PARAM_STATE, &prev);
 #ifdef HAS_SWITCH
-    cur = PIN_getInputValue(Board_SWITCH);
+    cur = !PIN_getInputValue(Board_SWITCH);
 #elif defined(HAS_BUTTON)
-    cur = PIN_getInputValue(Board_BUTTON);
+    cur = !PIN_getInputValue(Board_BUTTON);
 #endif
 
     if (prev != cur)
@@ -264,9 +264,9 @@ void HomeAutomationKeys_reset(void)
 
     // Set current state of switch
 #ifdef HAS_SWITCH
-    switchState = PIN_getInputValue(Board_SWITCH);
+    switchState = !PIN_getInputValue(Board_SWITCH);
 #elif defined(HAS_BUTTON)
-    switchState = PIN_getInputValue(Board_BUTTON);
+    switchState = !PIN_getInputValue(Board_BUTTON);
 #endif
     Switch_SetParameter(SWITCH_PARAM_STATE, 1, &switchState);
   }
