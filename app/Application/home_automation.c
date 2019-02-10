@@ -49,6 +49,7 @@
 #include "gapgattserver.h"
 #include "gattservapp.h"
 #include "devinfoservice.h"
+#include "ble_user_config.h"
 
 #if defined(FEATURE_OAD) || defined(IMAGE_INVALIDATE)
 #include "oad_target.h"
@@ -483,6 +484,10 @@ static void HomeAutomation_init(void)
 #ifdef IMAGE_INVALIDATE
   Reset_addService();
 #endif //IMAGE_INVALIDATE
+
+#if defined(EXCLUDE_BATT) || defined(MAX_TX_POWER)
+  HCI_EXT_SetTxPowerCmd(txPwrTbl.numTxPwrVals - 1);
+#endif
 
   // Add battery monitor
   HomeAutomationBatt_init();
