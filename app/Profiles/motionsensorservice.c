@@ -9,6 +9,7 @@
 #include "gatt_uuid.h"
 #include "gatt_profile_uuid.h"
 #include "gattservapp.h"
+#include "ha_util.h"
 
 #include "motionsensorservice.h"
 
@@ -40,15 +41,15 @@
  * GLOBAL VARIABLES
  */
 // Motion Sensor service
-CONST uint8_t motionSensorServiceUUID[ATT_BT_UUID_SIZE] =
+CONST uint8_t motionSensorServiceUUID[HA_UUID_SIZE] =
 {
-  LO_UINT16(MOTION_SENSOR_SERV_UUID), HI_UINT16(MOTION_SENSOR_SERV_UUID)
+  HA_UUID(MOTION_SENSOR_SERV_UUID)
 };
 
 // Motion Sensor state characteristic
-CONST uint8_t motionSensorStateUUID[ATT_BT_UUID_SIZE] =
+CONST uint8_t motionSensorStateUUID[HA_UUID_SIZE] =
 {
-  LO_UINT16(MOTION_SENSOR_STATE_UUID), HI_UINT16(MOTION_SENSOR_STATE_UUID)
+  HA_UUID(MOTION_SENSOR_STATE_UUID)
 };
 
 /*********************************************************************
@@ -68,7 +69,7 @@ CONST uint8_t motionSensorStateUUID[ATT_BT_UUID_SIZE] =
  */
 
 // Motion Sensor Service attribute.
-static CONST gattAttrType_t motionSensorService = { ATT_BT_UUID_SIZE,
+static CONST gattAttrType_t motionSensorService = { HA_UUID_SIZE,
   motionSensorServiceUUID };
 
 // Motion Sensor state characteristic.
@@ -106,7 +107,7 @@ static gattAttribute_t motionSensorAttrTbl[] =
 
       // Motion Sensor State Value
       {
-        { ATT_BT_UUID_SIZE, motionSensorStateUUID },
+        { HA_UUID_SIZE, motionSensorStateUUID },
 #ifndef DISABLE_AUTHENTICATION
         GATT_PERMIT_AUTHEN_READ,
 #else
@@ -281,13 +282,19 @@ static bStatus_t MotionSensorReadAttrCB(uint16_t connHandle,
   gattAttribute_t *pAttr, uint8_t *pValue, uint16_t *pLen, uint16_t offset,
   uint16_t maxLen, uint8_t method)
 {
+  uint16_t uuid;
   bStatus_t status = SUCCESS;
 
   // Make sure it's not a blob operation (no attributes in the profile are long)
   if (offset > 0)
     return ATT_ERR_ATTR_NOT_LONG;
 
-  uint16_t uuid = BUILD_UINT16(pAttr->type.uuid[0], pAttr->type.uuid[1]);
+  if (utilExtractUuid16(pAttr, &uuid) == FAILURE)
+  {
+    // Invalid handle
+    *pLen = 0;
+    return ATT_ERR_INVALID_HANDLE;
+  }
 
   if (uuid == MOTION_SENSOR_STATE_UUID)
   {
@@ -319,8 +326,14 @@ static bStatus_t MotionSensorWriteAttrCB(uint16_t connHandle,
   uint8_t method)
 {
   bStatus_t status = SUCCESS;
+  uint16_t uuid;
 
-  uint16_t uuid = BUILD_UINT16(pAttr->type.uuid[0], pAttr->type.uuid[1]);
+  if (utilExtractUuid16(pAttr, &uuid) == FAILURE)
+  {
+    // Invalid handle
+    return ATT_ERR_INVALID_HANDLE;
+  }
+
   switch (uuid)
   {
     case GATT_CLIENT_CHAR_CFG_UUID:

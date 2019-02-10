@@ -9,6 +9,7 @@
 #include "gatt_uuid.h"
 #include "gatt_profile_uuid.h"
 #include "gattservapp.h"
+#include "ha_util.h"
 
 #include "environmentalsensingservice.h"
 
@@ -78,9 +79,9 @@ CONST uint8_t temperatureUUID[ATT_BT_UUID_SIZE] =
 };
 
 // Humidity characteristic
-CONST uint8_t humidityUUID[ATT_BT_UUID_SIZE] =
+CONST uint8_t humidityUUID[HA_UUID_SIZE] =
 {
-  LO_UINT16(HUMIDITY_UUID), HI_UINT16(HUMIDITY_UUID)
+  HA_UUID(HUMIDITY_UUID)
 };
 
 /*********************************************************************
@@ -382,7 +383,7 @@ bStatus_t EnvironmentalSensing_AddService(uint32_t services)
 
         // Humidity Value
         {
-          { ATT_BT_UUID_SIZE, humidityUUID },
+          { HA_UUID_SIZE, humidityUUID },
 #ifndef DISABLE_AUTHENTICATION
           GATT_PERMIT_AUTHEN_READ,
 #else
@@ -586,13 +587,19 @@ static bStatus_t EnvironmentalSensingReadAttrCB(uint16_t connHandle,
   gattAttribute_t *pAttr, uint8_t *pValue, uint16_t *pLen, uint16_t offset,
   uint16_t maxLen, uint8_t method)
 {
+  uint16_t uuid;
   bStatus_t status = SUCCESS;
 
   // Make sure it's not a blob operation (no attributes in the profile are long)
   if (offset > 0)
     return ATT_ERR_ATTR_NOT_LONG;
 
-  uint16_t uuid = BUILD_UINT16(pAttr->type.uuid[0], pAttr->type.uuid[1]);
+  if (utilExtractUuid16(pAttr, &uuid) == FAILURE)
+  {
+    // Invalid handle
+    *pLen = 0;
+    return ATT_ERR_INVALID_HANDLE;
+  }
 
   switch (uuid)
   {
@@ -640,8 +647,14 @@ static bStatus_t EnvironmentalSensingWriteAttrCB(uint16_t connHandle,
   uint8_t method)
 {
   bStatus_t status = SUCCESS;
+  uint16_t uuid;
 
-  uint16_t uuid = BUILD_UINT16(pAttr->type.uuid[0], pAttr->type.uuid[1]);
+  if (utilExtractUuid16(pAttr, &uuid) == FAILURE)
+  {
+    // Invalid handle
+    return ATT_ERR_INVALID_HANDLE;
+  }
+
   switch (uuid)
   {
     case GATT_CLIENT_CHAR_CFG_UUID:

@@ -11,6 +11,7 @@
 #include "gatt_uuid.h"
 #include "gatt_profile_uuid.h"
 #include "gattservapp.h"
+#include "ha_util.h"
 
 #include "rgbledservice.h"
 
@@ -44,15 +45,15 @@
  * GLOBAL VARIABLES
  */
 // RGB LED service
-CONST uint8_t rgbLedServiceUUID[ATT_BT_UUID_SIZE] =
+CONST uint8_t rgbLedServiceUUID[HA_UUID_SIZE] =
 {
-  LO_UINT16(RGB_LED_SERV_UUID), HI_UINT16(RGB_LED_SERV_UUID)
+  HA_UUID(RGB_LED_SERV_UUID)
 };
 
 // RGB LED color characteristic
-CONST uint8_t rgbLedColorUUID[ATT_BT_UUID_SIZE] =
+CONST uint8_t rgbLedColorUUID[HA_UUID_SIZE] =
 {
-  LO_UINT16(RGB_LED_COLOR_UUID), HI_UINT16(RGB_LED_COLOR_UUID)
+  HA_UUID(RGB_LED_COLOR_UUID)
 };
 
 /*********************************************************************
@@ -75,7 +76,7 @@ static rgbLedServiceColorChangeCB_t rgbLedServiceColorChangeCB = NULL;
  */
 
 // RGB LED Service attribute.
-static CONST gattAttrType_t rgbLedService = { ATT_BT_UUID_SIZE, rgbLedServiceUUID };
+static CONST gattAttrType_t rgbLedService = { HA_UUID_SIZE, rgbLedServiceUUID };
 
 // RGB LED color characteristic.
 static uint8_t rgbLedColorProps = GATT_PROP_READ | GATT_PROP_WRITE | GATT_PROP_NOTIFY;
@@ -112,7 +113,7 @@ static gattAttribute_t rgbLedAttrTbl[] =
 
       // RGB LED Color Value
       {
-        { ATT_BT_UUID_SIZE, rgbLedColorUUID },
+        { HA_UUID_SIZE, rgbLedColorUUID },
 #ifndef DISABLE_AUTHENTICATION
         GATT_PERMIT_AUTHEN_READ | GATT_PERMIT_AUTHEN_WRITE,
 #else
@@ -282,13 +283,19 @@ static bStatus_t RGBLEDReadAttrCB(uint16_t connHandle, gattAttribute_t *pAttr,
   uint8_t *pValue, uint16_t *pLen, uint16_t offset, uint16_t maxLen,
   uint8_t method)
 {
+  uint16_t uuid;
   bStatus_t status = SUCCESS;
 
   // Make sure it's not a blob operation (no attributes in the profile are long)
   if (offset > 0)
     return ATT_ERR_ATTR_NOT_LONG;
 
-  uint16_t uuid = BUILD_UINT16(pAttr->type.uuid[0], pAttr->type.uuid[1]);
+  if (utilExtractUuid16(pAttr, &uuid) == FAILURE)
+  {
+    // Invalid handle
+    *pLen = 0;
+    return ATT_ERR_INVALID_HANDLE;
+  }
 
   if (uuid == RGB_LED_COLOR_UUID)
   {
@@ -319,6 +326,13 @@ static bStatus_t RGBLEDWriteAttrCB(uint16_t connHandle, gattAttribute_t *pAttr,
   uint8_t *pValue, uint16_t len, uint16_t offset, uint8_t method)
 {
   bStatus_t status = SUCCESS;
+  uint16_t uuid;
+
+  if (utilExtractUuid16(pAttr, &uuid) == FAILURE)
+  {
+    // Invalid handle
+    return ATT_ERR_INVALID_HANDLE;
+  }
 
   // If attribute permissions require authorization to write, return error
   if (gattPermitAuthorWrite(pAttr->permissions))
