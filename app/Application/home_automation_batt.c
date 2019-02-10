@@ -72,7 +72,7 @@
  */
 
 // How often to check battery (milliseconds)
-#define BATT_PERIOD         86400000 /* 1 day */
+#define BATT_PERIOD         60000 /* 1 minute */
 
 // Battery level is critical when it is less than this %
 #define BATT_CRITICAL_LEVEL 60
