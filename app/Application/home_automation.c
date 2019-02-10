@@ -459,7 +459,7 @@ static void HomeAutomation_init(void)
 
   // Setup the GAP Bond Manager
   {
-    uint32_t passkey = 0; // passkey "000000"
+    uint32_t passkey = 0xdeadbeef; // Passkey signature to be replaced by create_image.py
     uint8_t pairMode = GAPBOND_PAIRING_MODE_WAIT_FOR_REQ;
     uint8_t mitm = TRUE;
     uint8_t ioCap = GAPBOND_IO_CAP_DISPLAY_ONLY;

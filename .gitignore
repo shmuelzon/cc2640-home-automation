@@ -7,6 +7,7 @@ stack/.launches
 # Builds
 app/FlashROM
 stack/FlashROM
+home_automation.hex
 
 # Misc
 *.swp
