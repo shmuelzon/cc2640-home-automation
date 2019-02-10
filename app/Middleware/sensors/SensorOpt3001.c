@@ -41,7 +41,7 @@
 *  Includes
 * ------------------------------------------------------------------------------
 */
-#include "Board.h"
+#include "board.h"
 #include "SensorOpt3001.h"
 #include "SensorUtil.h"
 #include "SensorI2C.h"
