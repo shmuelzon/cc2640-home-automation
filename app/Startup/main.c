@@ -50,6 +50,7 @@
 
 #include <xdc/runtime/Error.h>
 
+#include <ti/drivers/ADC.h>
 #include <ti/drivers/Power.h>
 #include <ti/drivers/power/PowerCC26XX.h>
 #include <ti/sysbios/BIOS.h>
@@ -160,6 +161,7 @@ int main()
   RegisterAssertCback(AssertHandler);
 
   PIN_init(BoardGpioInitTable);
+  ADC_init();
 
 #ifdef CC1350_LAUNCHXL
   // Enable 2.4GHz Radio

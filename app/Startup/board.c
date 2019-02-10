@@ -511,3 +511,239 @@ const TRNGCC26XX_Config TRNGCC26XX_config[] = {
 /*
  *  ========================= TRNG end ====================================
  */
+
+/*
+ *  ========================== ADC begin =========================================
+ */
+/* Place into subsections to allow the TI linker to remove items properly */
+#if defined(__TI_COMPILER_VERSION__)
+#pragma DATA_SECTION(ADC_config, ".const:ADC_config")
+#pragma DATA_SECTION(adcCC26xxHWAttrs, ".const:adcCC26xxHWAttrs")
+#endif
+
+/* Include drivers */
+#include <ti/drivers/ADC.h>
+#include <ti/drivers/adc/ADCCC26XX.h>
+
+/* ADC objects */
+ADCCC26XX_Object adcCC26xxObjects[CC26XX_ADCCOUNT];
+
+const ADCCC26XX_HWAttrs adcCC26xxHWAttrs[CC26XX_ADCCOUNT] = {
+#if defined(CC2650_LAUNCHXL) || defined(CC2650DK_7ID) || defined(CC2650RC) || defined(CC2650STK)
+    {
+        .adcDIO = IOID_23,
+        .adcCompBInput = ADC_COMPB_IN_AUXIO7,
+        .refSource = ADCCC26XX_VDDS_REFERENCE,
+        .samplingDuration = ADCCC26XX_SAMPLING_DURATION_170_US,
+        .inputScalingEnabled = true,
+        .triggerSource = ADCCC26XX_TRIGGER_MANUAL
+    },
+    {
+        .adcDIO = IOID_24,
+        .adcCompBInput = ADC_COMPB_IN_AUXIO6,
+        .refSource = ADCCC26XX_VDDS_REFERENCE,
+        .samplingDuration = ADCCC26XX_SAMPLING_DURATION_170_US,
+        .inputScalingEnabled = true,
+        .triggerSource = ADCCC26XX_TRIGGER_MANUAL
+    },
+    {
+        .adcDIO = IOID_25,
+        .adcCompBInput = ADC_COMPB_IN_AUXIO5,
+        .refSource = ADCCC26XX_VDDS_REFERENCE,
+        .samplingDuration = ADCCC26XX_SAMPLING_DURATION_170_US,
+        .inputScalingEnabled = true,
+        .triggerSource = ADCCC26XX_TRIGGER_MANUAL
+    },
+    {
+        .adcDIO = IOID_26,
+        .adcCompBInput = ADC_COMPB_IN_AUXIO4,
+        .refSource = ADCCC26XX_VDDS_REFERENCE,
+        .samplingDuration = ADCCC26XX_SAMPLING_DURATION_170_US,
+        .inputScalingEnabled = true,
+        .triggerSource = ADCCC26XX_TRIGGER_MANUAL
+    },
+    {
+        .adcDIO = IOID_27,
+        .adcCompBInput = ADC_COMPB_IN_AUXIO3,
+        .refSource = ADCCC26XX_VDDS_REFERENCE,
+        .samplingDuration = ADCCC26XX_SAMPLING_DURATION_170_US,
+        .inputScalingEnabled = true,
+        .triggerSource = ADCCC26XX_TRIGGER_MANUAL
+    },
+    {
+        .adcDIO = IOID_28,
+        .adcCompBInput = ADC_COMPB_IN_AUXIO2,
+        .refSource = ADCCC26XX_VDDS_REFERENCE,
+        .samplingDuration = ADCCC26XX_SAMPLING_DURATION_170_US,
+        .inputScalingEnabled = true,
+        .triggerSource = ADCCC26XX_TRIGGER_MANUAL
+    },
+    {
+        .adcDIO = IOID_29,
+        .adcCompBInput = ADC_COMPB_IN_AUXIO1,
+        .refSource = ADCCC26XX_VDDS_REFERENCE,
+        .samplingDuration = ADCCC26XX_SAMPLING_DURATION_170_US,
+        .inputScalingEnabled = true,
+        .triggerSource = ADCCC26XX_TRIGGER_MANUAL
+    },
+    {
+        .adcDIO = IOID_30,
+        .adcCompBInput = ADC_COMPB_IN_AUXIO0,
+        .refSource = ADCCC26XX_VDDS_REFERENCE,
+        .samplingDuration = ADCCC26XX_SAMPLING_DURATION_170_US,
+        .inputScalingEnabled = true,
+        .triggerSource = ADCCC26XX_TRIGGER_MANUAL
+    },
+#elif defined(BOOSTXL_CC2650MA) || defined(CC2650DK_5XD)
+    {
+        .adcDIO = IOID_7,
+        .adcCompBInput = ADC_COMPB_IN_AUXIO7,
+        .refSource = ADCCC26XX_VDDS_REFERENCE,
+        .samplingDuration = ADCCC26XX_SAMPLING_DURATION_170_US,
+        .inputScalingEnabled = true,
+        .triggerSource = ADCCC26XX_TRIGGER_MANUAL
+    },
+    {
+        .adcDIO = IOID_8,
+        .adcCompBInput = ADC_COMPB_IN_AUXIO6,
+        .refSource = ADCCC26XX_VDDS_REFERENCE,
+        .samplingDuration = ADCCC26XX_SAMPLING_DURATION_170_US,
+        .inputScalingEnabled = true,
+        .triggerSource = ADCCC26XX_TRIGGER_MANUAL
+    },
+    {
+        .adcDIO = IOID_9,
+        .adcCompBInput = ADC_COMPB_IN_AUXIO5,
+        .refSource = ADCCC26XX_VDDS_REFERENCE,
+        .samplingDuration = ADCCC26XX_SAMPLING_DURATION_170_US,
+        .inputScalingEnabled = true,
+        .triggerSource = ADCCC26XX_TRIGGER_MANUAL
+    },
+    {
+        .adcDIO = IOID_10,
+        .adcCompBInput = ADC_COMPB_IN_AUXIO4,
+        .refSource = ADCCC26XX_VDDS_REFERENCE,
+        .samplingDuration = ADCCC26XX_SAMPLING_DURATION_170_US,
+        .inputScalingEnabled = true,
+        .triggerSource = ADCCC26XX_TRIGGER_MANUAL
+    },
+    {
+        .adcDIO = IOID_11,
+        .adcCompBInput = ADC_COMPB_IN_AUXIO3,
+        .refSource = ADCCC26XX_VDDS_REFERENCE,
+        .samplingDuration = ADCCC26XX_SAMPLING_DURATION_170_US,
+        .inputScalingEnabled = true,
+        .triggerSource = ADCCC26XX_TRIGGER_MANUAL
+    },
+    {
+        .adcDIO = IOID_12,
+        .adcCompBInput = ADC_COMPB_IN_AUXIO2,
+        .refSource = ADCCC26XX_VDDS_REFERENCE,
+        .samplingDuration = ADCCC26XX_SAMPLING_DURATION_170_US,
+        .inputScalingEnabled = true,
+        .triggerSource = ADCCC26XX_TRIGGER_MANUAL
+    },
+    {
+        .adcDIO = IOID_13,
+        .adcCompBInput = ADC_COMPB_IN_AUXIO1,
+        .refSource = ADCCC26XX_VDDS_REFERENCE,
+        .samplingDuration = ADCCC26XX_SAMPLING_DURATION_170_US,
+        .inputScalingEnabled = true,
+        .triggerSource = ADCCC26XX_TRIGGER_MANUAL
+    },
+    {
+        .adcDIO = IOID_14,
+        .adcCompBInput = ADC_COMPB_IN_AUXIO0,
+        .refSource = ADCCC26XX_VDDS_REFERENCE,
+        .samplingDuration = ADCCC26XX_SAMPLING_DURATION_170_US,
+        .inputScalingEnabled = true,
+        .triggerSource = ADCCC26XX_TRIGGER_MANUAL
+    },
+#elif defined(CC2650DK_4XS)
+    {
+        .adcDIO = IOID_5,
+        .adcCompBInput = ADC_COMPB_IN_AUXIO7,
+        .refSource = ADCCC26XX_VDDS_REFERENCE,
+        .samplingDuration = ADCCC26XX_SAMPLING_DURATION_170_US,
+        .inputScalingEnabled = true,
+        .triggerSource = ADCCC26XX_TRIGGER_MANUAL
+    },
+    {
+        .adcDIO = IOID_6,
+        .adcCompBInput = ADC_COMPB_IN_AUXIO6,
+        .refSource = ADCCC26XX_VDDS_REFERENCE,
+        .samplingDuration = ADCCC26XX_SAMPLING_DURATION_170_US,
+        .inputScalingEnabled = true,
+        .triggerSource = ADCCC26XX_TRIGGER_MANUAL
+    },
+    {
+        .adcDIO = IOID_7,
+        .adcCompBInput = ADC_COMPB_IN_AUXIO5,
+        .refSource = ADCCC26XX_VDDS_REFERENCE,
+        .samplingDuration = ADCCC26XX_SAMPLING_DURATION_170_US,
+        .inputScalingEnabled = true,
+        .triggerSource = ADCCC26XX_TRIGGER_MANUAL
+    },
+    {
+        .adcDIO = IOID_8,
+        .adcCompBInput = ADC_COMPB_IN_AUXIO4,
+        .refSource = ADCCC26XX_VDDS_REFERENCE,
+        .samplingDuration = ADCCC26XX_SAMPLING_DURATION_170_US,
+        .inputScalingEnabled = true,
+        .triggerSource = ADCCC26XX_TRIGGER_MANUAL
+    },
+    {
+        .adcDIO = IOID_9,
+        .adcCompBInput = ADC_COMPB_IN_AUXIO3,
+        .refSource = ADCCC26XX_VDDS_REFERENCE,
+        .samplingDuration = ADCCC26XX_SAMPLING_DURATION_170_US,
+        .inputScalingEnabled = true,
+        .triggerSource = ADCCC26XX_TRIGGER_MANUAL
+    },
+#endif
+    {
+        .adcDIO = PIN_UNASSIGNED,
+        .adcCompBInput = ADC_COMPB_IN_DCOUPL,
+        .refSource = ADCCC26XX_FIXED_REFERENCE,
+        .samplingDuration = ADCCC26XX_SAMPLING_DURATION_170_US,
+        .inputScalingEnabled = true,
+        .triggerSource = ADCCC26XX_TRIGGER_MANUAL
+    },
+    {
+        .adcDIO = PIN_UNASSIGNED,
+        .adcCompBInput = ADC_COMPB_IN_VSS,
+        .refSource = ADCCC26XX_FIXED_REFERENCE,
+        .samplingDuration = ADCCC26XX_SAMPLING_DURATION_170_US,
+        .inputScalingEnabled = true,
+        .triggerSource = ADCCC26XX_TRIGGER_MANUAL
+    },
+    {
+        .adcDIO = PIN_UNASSIGNED,
+        .adcCompBInput = ADC_COMPB_IN_VDDS,
+        .refSource = ADCCC26XX_FIXED_REFERENCE,
+        .samplingDuration = ADCCC26XX_SAMPLING_DURATION_170_US,
+        .inputScalingEnabled = true,
+        .triggerSource = ADCCC26XX_TRIGGER_MANUAL
+    }
+};
+
+const ADC_Config ADC_config[] = {
+    {&ADCCC26XX_fxnTable, &adcCC26xxObjects[0], &adcCC26xxHWAttrs[0]},
+    {&ADCCC26XX_fxnTable, &adcCC26xxObjects[1], &adcCC26xxHWAttrs[1]},
+    {&ADCCC26XX_fxnTable, &adcCC26xxObjects[2], &adcCC26xxHWAttrs[2]},
+    {&ADCCC26XX_fxnTable, &adcCC26xxObjects[3], &adcCC26xxHWAttrs[3]},
+    {&ADCCC26XX_fxnTable, &adcCC26xxObjects[4], &adcCC26xxHWAttrs[4]},
+    {&ADCCC26XX_fxnTable, &adcCC26xxObjects[5], &adcCC26xxHWAttrs[5]},
+    {&ADCCC26XX_fxnTable, &adcCC26xxObjects[6], &adcCC26xxHWAttrs[6]},
+    {&ADCCC26XX_fxnTable, &adcCC26xxObjects[7], &adcCC26xxHWAttrs[7]},
+#ifndef CC2650DK_4XS
+    {&ADCCC26XX_fxnTable, &adcCC26xxObjects[8], &adcCC26xxHWAttrs[8]},
+    {&ADCCC26XX_fxnTable, &adcCC26xxObjects[9], &adcCC26xxHWAttrs[9]},
+    {&ADCCC26XX_fxnTable, &adcCC26xxObjects[10], &adcCC26xxHWAttrs[10]},
+#endif
+    {NULL, NULL, NULL},
+};
+
+/*
+ *  ========================== ADC end =========================================
+ */

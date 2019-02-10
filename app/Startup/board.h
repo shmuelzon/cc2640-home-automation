@@ -177,6 +177,20 @@ extern const PIN_Config BoardGpioInitTable[];
 #define Board_PWM7                  CC26XX_PWM7
 /* Generic TRNG instance identifier */
 #define Board_TRNG                  CC26XX_TRNG0
+/* Generic ADC instance identifier */
+#define Board_ADC0                  CC26XX_ADC0
+#define Board_ADC1                  CC26XX_ADC1
+#define Board_ADC2                  CC26XX_ADC2
+#define Board_ADC3                  CC26XX_ADC3
+#define Board_ADC4                  CC26XX_ADC4
+#ifndef CC2650DK_4XS
+#define Board_ADC5                  CC26XX_ADC5
+#define Board_ADC6                  CC26XX_ADC6
+#define Board_ADC7                  CC26XX_ADC7
+#endif
+#define Board_ADCDCOUPL             CC26XX_ADCDCOUPL
+#define Board_ADCVSS                CC26XX_ADCVSS
+#define Board_ADCVDDS               CC26XX_ADCVDDS
 
 /** ============================================================================
  *  Number of peripherals and their names
@@ -283,6 +297,26 @@ typedef enum CC26XX_PWM
     CC26XX_PWMCOUNT
 } CC26XX_PWM;
 
+/*!
+ *  @def    CC26XX_ADCName
+ *  @brief  Enum of ADCs
+ */
+typedef enum CC26XX_ADCName {
+    CC26XX_ADC0 = 0,
+    CC26XX_ADC1,
+    CC26XX_ADC2,
+    CC26XX_ADC3,
+    CC26XX_ADC4,
+#ifndef CC2650DK_4XS
+    CC26XX_ADC5,
+    CC26XX_ADC6,
+    CC26XX_ADC7,
+#endif
+    CC26XX_ADCDCOUPL,
+    CC26XX_ADCVSS,
+    CC26XX_ADCVDDS,
+    CC26XX_ADCCOUNT
+} CC26XX_ADCName;
 
 #ifdef __cplusplus
 }
