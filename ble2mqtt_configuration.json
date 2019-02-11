@@ -1,0 +1,61 @@
+{
+  "ble": {
+    "services": {
+      "definitions": {
+        "1e352f00-1217-5887-a357-c9acbd789b14": {
+          "name": "RelayService"
+        },
+        "1e352f10-1217-5887-a357-c9acbd789b14": {
+          "name": "SwitchService"
+        },
+        "1e352f20-1217-5887-a357-c9acbd789b14": {
+          "name": "ContactSensorService"
+        },
+        "1e352f30-1217-5887-a357-c9acbd789b14": {
+          "name": "MotionSensorService"
+        },
+        "1e352f50-1217-5887-a357-c9acbd789b14": {
+          "name": "RGBLEDService"
+        }
+      }
+    },
+    "characteristics": {
+      "definitions": {
+        "1e352f01-1217-5887-a357-c9acbd789b14": {
+          "name": "RelayState",
+          "types": [
+            "boolean"
+          ]
+        },
+        "1e352f11-1217-5887-a357-c9acbd789b14": {
+          "name": "SwitchState",
+          "types": [
+            "boolean"
+          ]
+        },
+        "1e352f21-1217-5887-a357-c9acbd789b14": {
+          "name": "ContactSensorState",
+          "types": [
+            "boolean"
+          ]
+        },
+        "1e352f31-1217-5887-a357-c9acbd789b14": {
+          "name": "MotionSensorState",
+          "types": [
+            "boolean"
+          ]
+        },
+        "1e352f41-1217-5887-a357-c9acbd789b14": {
+          "name": "Luminance",
+          "types": [
+            "uint32"
+          ]
+        },
+        "1e352f51-1217-5887-a357-c9acbd789b14": {
+          "name": "RGBLEDColor",
+          "_types": "// Byte array of R,G,B values for each LED"
+        }
+      }
+    }
+  }
+}
